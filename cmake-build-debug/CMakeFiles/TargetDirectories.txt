@@ -1,0 +1,3 @@
+/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/MeanShiftParallel.dir
+/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/rebuild_cache.dir

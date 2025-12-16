@@ -47,7 +47,7 @@ events:
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
       
       The C compiler identification is AppleClang, found in:
-        /Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/3.31.6/CompilerIdC/CMakeCCompilerId.o
+        /Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/3.31.6/CompilerIdC/CMakeCCompilerId.o
       
   -
     kind: "message-v1"
@@ -88,7 +88,7 @@ events:
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
       
       The CXX compiler identification is AppleClang, found in:
-        /Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/3.31.6/CompilerIdCXX/CMakeCXXCompilerId.o
+        /Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/3.31.6/CompilerIdCXX/CMakeCXXCompilerId.o
       
   -
     kind: "try_compile-v1"
@@ -99,8 +99,8 @@ events:
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-YJ1TnP"
-      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-YJ1TnP"
+      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-OGkwHv"
+      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-OGkwHv"
     cmakeVariables:
       CMAKE_C_FLAGS: ""
       CMAKE_C_FLAGS_DEBUG: "-g"
@@ -112,16 +112,18 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-YJ1TnP'
+        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-OGkwHv'
         
-        Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_1f8bb
-        [1/2] /Library/Developer/CommandLineTools/usr/bin/cc   -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -v -Wl,-v -MD -MT CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o -MF CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o.d -o CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o -c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCCompilerABI.c
+        Run Build Command(s): /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_a12df/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_a12df.dir/build.make CMakeFiles/cmTC_a12df.dir/build
+        Building C object CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o
+        /Library/Developer/CommandLineTools/usr/bin/cc   -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -v -Wl,-v -MD -MT CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o -MF CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o.d -o CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o -c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCCompilerABI.c
         Apple clang version 17.0.0 (clang-1700.0.13.5)
         Target: arm64-apple-darwin24.6.0
         Thread model: posix
         InstalledDir: /Library/Developer/CommandLineTools/usr/bin
-        cc: warning: -Wl,-v: 'linker' input unused [-Wunused-command-line-argument]
-         "/Library/Developer/CommandLineTools/usr/bin/clang" -cc1 -triple arm64-apple-macosx15.0.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -target-sdk-version=15.5 -fvisibility-inlines-hidden-static-local-var -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -target-cpu apple-m1 -target-feature +zcm -target-feature +zcz -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb "-fdebug-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-YJ1TnP" -target-linker-version 1167.5 -v "-fcoverage-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-YJ1TnP" -resource-dir /Library/Developer/CommandLineTools/usr/lib/clang/17 -dependency-file CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o -sys-header-deps -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/usr/lib/clang/17/include -internal-externc-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include -internal-externc-isystem /Library/Developer/CommandLineTools/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fmax-type-align=16 -fcommon -fcolor-diagnostics -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o -x c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCCompilerABI.c
+        cc: \x1b[0;1;35mwarning: \x1b[0m\x1b[1m-Wl,-v: 'linker' input unused [-Wunused-command-line-argument]\x1b[0m
+         "/Library/Developer/CommandLineTools/usr/bin/clang" -cc1 -triple arm64-apple-macosx15.0.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -target-sdk-version=15.5 -fvisibility-inlines-hidden-static-local-var -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -target-cpu apple-m1 -target-feature +zcm -target-feature +zcz -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb "-fdebug-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-OGkwHv" -target-linker-version 1167.5 -v "-fcoverage-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-OGkwHv" -resource-dir /Library/Developer/CommandLineTools/usr/lib/clang/17 -dependency-file CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o -sys-header-deps -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/usr/lib/clang/17/include -internal-externc-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include -internal-externc-isystem /Library/Developer/CommandLineTools/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fmax-type-align=16 -fcommon -fcolor-diagnostics -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o -x c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCCompilerABI.c
         clang -cc1 version 17.0.0 (clang-1700.0.13.5) default target arm64-apple-darwin24.6.0
         ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include"
         ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/SubFrameworks"
@@ -133,12 +135,13 @@ events:
          /Library/Developer/CommandLineTools/usr/include
          /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks (framework directory)
         End of search list.
-        [2/2] : && /Library/Developer/CommandLineTools/usr/bin/cc -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names -v -Wl,-v CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o -o cmTC_1f8bb   && :
+        Linking C executable cmTC_a12df
+        /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a12df.dir/link.txt --verbose=1
         Apple clang version 17.0.0 (clang-1700.0.13.5)
         Target: arm64-apple-darwin24.6.0
         Thread model: posix
         InstalledDir: /Library/Developer/CommandLineTools/usr/bin
-         "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -lto_library /Library/Developer/CommandLineTools/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 15.0.0 15.5 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_1f8bb -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o -lSystem /Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a
+         "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -lto_library /Library/Developer/CommandLineTools/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 15.0.0 15.5 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_a12df -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o -lSystem /Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a
         @(#)PROGRAM:ld PROJECT:ld-1167.5
         BUILD 01:45:05 Apr 30 2025
         configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em
@@ -150,6 +153,7 @@ events:
         	/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib/swift
         Framework search paths:
         	/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks
+        /Library/Developer/CommandLineTools/usr/bin/cc  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o -o cmTC_a12df
         
       exitCode: 0
   -
@@ -168,17 +172,9 @@ events:
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:2 (project)"
     message: |
-      Parsed C implicit include dir info: rv=done
+      Parsed C implicit include dir info: rv=loading
         found start of include info
-        found start of implicit include info
-          add: [/Library/Developer/CommandLineTools/usr/lib/clang/17/include]
-          add: [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include]
-          add: [/Library/Developer/CommandLineTools/usr/include]
-        end of search list found
-        collapse include dir [/Library/Developer/CommandLineTools/usr/lib/clang/17/include] ==> [/Library/Developer/CommandLineTools/usr/lib/clang/17/include]
-        collapse include dir [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include] ==> [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include]
-        collapse include dir [/Library/Developer/CommandLineTools/usr/include] ==> [/Library/Developer/CommandLineTools/usr/include]
-        implicit include dirs: [/Library/Developer/CommandLineTools/usr/lib/clang/17/include;/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include;/Library/Developer/CommandLineTools/usr/include]
+        warn: unable to parse implicit include dirs!
       
       
   -
@@ -191,61 +187,19 @@ events:
       Parsed C implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
         linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
-        ignore line: [Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-YJ1TnP']
+        ignore line: [Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-OGkwHv']
         ignore line: []
-        ignore line: [Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_1f8bb]
-        ignore line: [[1/2] /Library/Developer/CommandLineTools/usr/bin/cc   -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -v -Wl -v -MD -MT CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o -MF CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o.d -o CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o -c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCCompilerABI.c]
+        ignore line: [Run Build Command(s): /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_a12df/fast]
+        ignore line: [/Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_a12df.dir/build.make CMakeFiles/cmTC_a12df.dir/build]
+        ignore line: [Building C object CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o]
+        ignore line: [/Library/Developer/CommandLineTools/usr/bin/cc   -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -v -Wl -v -MD -MT CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o -MF CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o.d -o CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o -c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCCompilerABI.c]
         ignore line: [Apple clang version 17.0.0 (clang-1700.0.13.5)]
         ignore line: [Target: arm64-apple-darwin24.6.0]
         ignore line: [Thread model: posix]
         ignore line: [InstalledDir: /Library/Developer/CommandLineTools/usr/bin]
-        ignore line: [cc: warning: -Wl -v: 'linker' input unused [-Wunused-command-line-argument]]
-        ignore line: [ "/Library/Developer/CommandLineTools/usr/bin/clang" -cc1 -triple arm64-apple-macosx15.0.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -target-sdk-version=15.5 -fvisibility-inlines-hidden-static-local-var -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -target-cpu apple-m1 -target-feature +zcm -target-feature +zcz -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb "-fdebug-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-YJ1TnP" -target-linker-version 1167.5 -v "-fcoverage-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-YJ1TnP" -resource-dir /Library/Developer/CommandLineTools/usr/lib/clang/17 -dependency-file CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o -sys-header-deps -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/usr/lib/clang/17/include -internal-externc-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include -internal-externc-isystem /Library/Developer/CommandLineTools/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fmax-type-align=16 -fcommon -fcolor-diagnostics -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o -x c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCCompilerABI.c]
-        ignore line: [clang -cc1 version 17.0.0 (clang-1700.0.13.5) default target arm64-apple-darwin24.6.0]
-        ignore line: [ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include"]
-        ignore line: [ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/SubFrameworks"]
-        ignore line: [ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/Library/Frameworks"]
-        ignore line: [#include "..." search starts here:]
-        ignore line: [#include <...> search starts here:]
-        ignore line: [ /Library/Developer/CommandLineTools/usr/lib/clang/17/include]
-        ignore line: [ /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include]
-        ignore line: [ /Library/Developer/CommandLineTools/usr/include]
-        ignore line: [ /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks (framework directory)]
-        ignore line: [End of search list.]
-        ignore line: [[2/2] : && /Library/Developer/CommandLineTools/usr/bin/cc -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl -search_paths_first -Wl -headerpad_max_install_names -v -Wl -v CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o -o cmTC_1f8bb   && :]
-        ignore line: [Apple clang version 17.0.0 (clang-1700.0.13.5)]
-        ignore line: [Target: arm64-apple-darwin24.6.0]
-        ignore line: [Thread model: posix]
-        ignore line: [InstalledDir: /Library/Developer/CommandLineTools/usr/bin]
-        link line: [ "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -lto_library /Library/Developer/CommandLineTools/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 15.0.0 15.5 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_1f8bb -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o -lSystem /Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a]
-          arg [/Library/Developer/CommandLineTools/usr/bin/ld] ==> ignore
-          arg [-demangle] ==> ignore
-          arg [-lto_library] ==> ignore, skip following value
-          arg [/Library/Developer/CommandLineTools/usr/lib/libLTO.dylib] ==> skip value of -lto_library
-          arg [-dynamic] ==> ignore
-          arg [-arch] ==> ignore
-          arg [arm64] ==> ignore
-          arg [-platform_version] ==> ignore
-          arg [macos] ==> ignore
-          arg [15.0.0] ==> ignore
-          arg [15.5] ==> ignore
-          arg [-syslibroot] ==> ignore
-          arg [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk] ==> ignore
-          arg [-mllvm] ==> ignore
-          arg [-enable-linkonceodr-outlining] ==> ignore
-          arg [-o] ==> ignore
-          arg [cmTC_1f8bb] ==> ignore
-          arg [-search_paths_first] ==> ignore
-          arg [-headerpad_max_install_names] ==> ignore
-          arg [-v] ==> ignore
-          arg [CMakeFiles/cmTC_1f8bb.dir/CMakeCCompilerABI.c.o] ==> ignore
-          arg [-lSystem] ==> lib [System]
-          arg [/Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a] ==> lib [/Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a]
-        linker tool for 'C': /Library/Developer/CommandLineTools/usr/bin/ld
+        ignore line: [cc: \x1b[0;1;35mwarning: \x1b[0m\x1b[1m-Wl,-v: 'linker' input unused [-Wunused-command-line-argument]\x1b[0m; "/Library/Developer/CommandLineTools/usr/bin/clang" -cc1 -triple arm64-apple-macosx15.0.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -target-sdk-version=15.5 -fvisibility-inlines-hidden-static-local-var -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -target-cpu apple-m1 -target-feature +zcm -target-feature +zcz -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb "-fdebug-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-OGkwHv" -target-linker-version 1167.5 -v "-fcoverage-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-OGkwHv" -resource-dir /Library/Developer/CommandLineTools/usr/lib/clang/17 -dependency-file CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o -sys-header-deps -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/usr/lib/clang/17/include -internal-externc-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include -internal-externc-isystem /Library/Developer/CommandLineTools/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fmax-type-align=16 -fcommon -fcolor-diagnostics -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o -x c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCCompilerABI.c;clang -cc1 version 17.0.0 (clang-1700.0.13.5) default target arm64-apple-darwin24.6.0;ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include";ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/SubFrameworks";ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/Library/Frameworks";#include "..." search starts here:;#include <...> search starts here:; /Library/Developer/CommandLineTools/usr/lib/clang/17/include; /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include; /Library/Developer/CommandLineTools/usr/include; /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks (framework directory);End of search list.;Linking C executable cmTC_a12df;/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a12df.dir/link.txt --verbose=1;Apple clang version 17.0.0 (clang-1700.0.13.5);Target: arm64-apple-darwin24.6.0;Thread model: posix;InstalledDir: /Library/Developer/CommandLineTools/usr/bin; "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -lto_library /Library/Developer/CommandLineTools/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 15.0.0 15.5 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_a12df -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o -lSystem /Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a;@(#)PROGRAM:ld PROJECT:ld-1167.5;BUILD 01:45:05 Apr 30 2025;configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em;will use ld-classic for: armv6 armv7 armv7s i386 armv6m armv7k armv7m armv7em;LTO support using: LLVM version 17.0.0 (static support for 29, runtime is 29);TAPI support using: Apple TAPI version 17.0.0 (tapi-1700.0.3.5);Library search paths:;	/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib;	/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib/swift;Framework search paths:;	/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks;/Library/Developer/CommandLineTools/usr/bin/cc  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_a12df.dir/CMakeCCompilerABI.c.o -o cmTC_a12df;;]
         Library search paths: [;/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib;/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib/swift]
         Framework search paths: [;/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks]
-        remove lib [System]
-        remove lib [/Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a]
         collapse library dir [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib] ==> [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib]
         collapse library dir [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib/swift] ==> [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib/swift]
         collapse framework dir [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks] ==> [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks]
@@ -256,21 +210,6 @@ events:
       
       
   -
-    kind: "message-v1"
-    backtrace:
-      - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
-      - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
-      - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
-    message: |
-      Running the C compiler's linker: "/Library/Developer/CommandLineTools/usr/bin/ld" "-v"
-      @(#)PROGRAM:ld PROJECT:ld-1167.5
-      BUILD 01:45:05 Apr 30 2025
-      configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em
-      will use ld-classic for: armv6 armv7 armv7s i386 armv6m armv7k armv7m armv7em
-      LTO support using: LLVM version 17.0.0 (static support for 29, runtime is 29)
-      TAPI support using: Apple TAPI version 17.0.0 (tapi-1700.0.3.5)
-  -
     kind: "try_compile-v1"
     backtrace:
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
@@ -279,8 +218,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-FH87Ab"
-      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-FH87Ab"
+      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-WRWPTH"
+      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-WRWPTH"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -293,17 +232,19 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-FH87Ab'
+        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-WRWPTH'
         
-        Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_b0ffb
-        [1/2] /Library/Developer/CommandLineTools/usr/bin/c++   -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -v -Wl,-v -MD -MT CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o -c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp
+        Run Build Command(s): /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_c89bb/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_c89bb.dir/build.make CMakeFiles/cmTC_c89bb.dir/build
+        Building CXX object CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o
+        /Library/Developer/CommandLineTools/usr/bin/c++   -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -v -Wl,-v -MD -MT CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o -c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp
         Apple clang version 17.0.0 (clang-1700.0.13.5)
         Target: arm64-apple-darwin24.6.0
         Thread model: posix
         InstalledDir: /Library/Developer/CommandLineTools/usr/bin
-        c++: warning: -Wl,-v: 'linker' input unused [-Wunused-command-line-argument]
+        c++: \x1b[0;1;35mwarning: \x1b[0m\x1b[1m-Wl,-v: 'linker' input unused [-Wunused-command-line-argument]\x1b[0m
         ignoring nonexistent directory "/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"
-         "/Library/Developer/CommandLineTools/usr/bin/clang" -cc1 -triple arm64-apple-macosx15.0.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -target-sdk-version=15.5 -fvisibility-inlines-hidden-static-local-var -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -target-cpu apple-m1 -target-feature +zcm -target-feature +zcz -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb "-fdebug-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-FH87Ab" -target-linker-version 1167.5 -v "-fcoverage-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-FH87Ab" -resource-dir /Library/Developer/CommandLineTools/usr/lib/clang/17 -dependency-file CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1 -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/usr/lib/clang/17/include -internal-externc-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include -internal-externc-isystem /Library/Developer/CommandLineTools/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -fdeprecated-macro -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fno-cxx-modules -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -fmax-type-align=16 -fcommon -fcolor-diagnostics -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o -x c++ /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp
+         "/Library/Developer/CommandLineTools/usr/bin/clang" -cc1 -triple arm64-apple-macosx15.0.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -target-sdk-version=15.5 -fvisibility-inlines-hidden-static-local-var -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -target-cpu apple-m1 -target-feature +zcm -target-feature +zcz -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb "-fdebug-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-WRWPTH" -target-linker-version 1167.5 -v "-fcoverage-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-WRWPTH" -resource-dir /Library/Developer/CommandLineTools/usr/lib/clang/17 -dependency-file CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1 -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/usr/lib/clang/17/include -internal-externc-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include -internal-externc-isystem /Library/Developer/CommandLineTools/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -fdeprecated-macro -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fno-cxx-modules -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -fmax-type-align=16 -fcommon -fcolor-diagnostics -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o -x c++ /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp
         clang -cc1 version 17.0.0 (clang-1700.0.13.5) default target arm64-apple-darwin24.6.0
         ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include"
         ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/SubFrameworks"
@@ -316,12 +257,13 @@ events:
          /Library/Developer/CommandLineTools/usr/include
          /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks (framework directory)
         End of search list.
-        [2/2] : && /Library/Developer/CommandLineTools/usr/bin/c++ -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names -v -Wl,-v CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_b0ffb   && :
+        Linking CXX executable cmTC_c89bb
+        /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c89bb.dir/link.txt --verbose=1
         Apple clang version 17.0.0 (clang-1700.0.13.5)
         Target: arm64-apple-darwin24.6.0
         Thread model: posix
         InstalledDir: /Library/Developer/CommandLineTools/usr/bin
-         "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -lto_library /Library/Developer/CommandLineTools/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 15.0.0 15.5 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_b0ffb -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a
+         "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -lto_library /Library/Developer/CommandLineTools/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 15.0.0 15.5 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_c89bb -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a
         @(#)PROGRAM:ld PROJECT:ld-1167.5
         BUILD 01:45:05 Apr 30 2025
         configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em
@@ -333,6 +275,7 @@ events:
         	/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib/swift
         Framework search paths:
         	/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks
+        /Library/Developer/CommandLineTools/usr/bin/c++  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_c89bb
         
       exitCode: 0
   -
@@ -351,19 +294,9 @@ events:
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:2 (project)"
     message: |
-      Parsed CXX implicit include dir info: rv=done
+      Parsed CXX implicit include dir info: rv=loading
         found start of include info
-        found start of implicit include info
-          add: [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1]
-          add: [/Library/Developer/CommandLineTools/usr/lib/clang/17/include]
-          add: [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include]
-          add: [/Library/Developer/CommandLineTools/usr/include]
-        end of search list found
-        collapse include dir [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1] ==> [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1]
-        collapse include dir [/Library/Developer/CommandLineTools/usr/lib/clang/17/include] ==> [/Library/Developer/CommandLineTools/usr/lib/clang/17/include]
-        collapse include dir [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include] ==> [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include]
-        collapse include dir [/Library/Developer/CommandLineTools/usr/include] ==> [/Library/Developer/CommandLineTools/usr/include]
-        implicit include dirs: [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1;/Library/Developer/CommandLineTools/usr/lib/clang/17/include;/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include;/Library/Developer/CommandLineTools/usr/include]
+        warn: unable to parse implicit include dirs!
       
       
   -
@@ -376,102 +309,38 @@ events:
       Parsed CXX implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
         linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
-        ignore line: [Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-FH87Ab']
+        ignore line: [Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-WRWPTH']
         ignore line: []
-        ignore line: [Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_b0ffb]
-        ignore line: [[1/2] /Library/Developer/CommandLineTools/usr/bin/c++   -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -v -Wl -v -MD -MT CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o -c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Run Build Command(s): /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_c89bb/fast]
+        ignore line: [/Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_c89bb.dir/build.make CMakeFiles/cmTC_c89bb.dir/build]
+        ignore line: [Building CXX object CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o]
+        ignore line: [/Library/Developer/CommandLineTools/usr/bin/c++   -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -v -Wl -v -MD -MT CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o -c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp]
         ignore line: [Apple clang version 17.0.0 (clang-1700.0.13.5)]
         ignore line: [Target: arm64-apple-darwin24.6.0]
         ignore line: [Thread model: posix]
         ignore line: [InstalledDir: /Library/Developer/CommandLineTools/usr/bin]
-        ignore line: [c++: warning: -Wl -v: 'linker' input unused [-Wunused-command-line-argument]]
-        ignore line: [ignoring nonexistent directory "/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"]
-        ignore line: [ "/Library/Developer/CommandLineTools/usr/bin/clang" -cc1 -triple arm64-apple-macosx15.0.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -target-sdk-version=15.5 -fvisibility-inlines-hidden-static-local-var -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -target-cpu apple-m1 -target-feature +zcm -target-feature +zcz -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb "-fdebug-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-FH87Ab" -target-linker-version 1167.5 -v "-fcoverage-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-FH87Ab" -resource-dir /Library/Developer/CommandLineTools/usr/lib/clang/17 -dependency-file CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1 -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/usr/lib/clang/17/include -internal-externc-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include -internal-externc-isystem /Library/Developer/CommandLineTools/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -fdeprecated-macro -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fno-cxx-modules -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -fmax-type-align=16 -fcommon -fcolor-diagnostics -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o -x c++ /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp]
-        ignore line: [clang -cc1 version 17.0.0 (clang-1700.0.13.5) default target arm64-apple-darwin24.6.0]
-        ignore line: [ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include"]
-        ignore line: [ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/SubFrameworks"]
-        ignore line: [ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/Library/Frameworks"]
-        ignore line: [#include "..." search starts here:]
-        ignore line: [#include <...> search starts here:]
-        ignore line: [ /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1]
-        ignore line: [ /Library/Developer/CommandLineTools/usr/lib/clang/17/include]
-        ignore line: [ /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include]
-        ignore line: [ /Library/Developer/CommandLineTools/usr/include]
-        ignore line: [ /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks (framework directory)]
-        ignore line: [End of search list.]
-        ignore line: [[2/2] : && /Library/Developer/CommandLineTools/usr/bin/c++ -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl -search_paths_first -Wl -headerpad_max_install_names -v -Wl -v CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_b0ffb   && :]
-        ignore line: [Apple clang version 17.0.0 (clang-1700.0.13.5)]
-        ignore line: [Target: arm64-apple-darwin24.6.0]
-        ignore line: [Thread model: posix]
-        ignore line: [InstalledDir: /Library/Developer/CommandLineTools/usr/bin]
-        link line: [ "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -lto_library /Library/Developer/CommandLineTools/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 15.0.0 15.5 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_b0ffb -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a]
-          arg [/Library/Developer/CommandLineTools/usr/bin/ld] ==> ignore
-          arg [-demangle] ==> ignore
-          arg [-lto_library] ==> ignore, skip following value
-          arg [/Library/Developer/CommandLineTools/usr/lib/libLTO.dylib] ==> skip value of -lto_library
-          arg [-dynamic] ==> ignore
-          arg [-arch] ==> ignore
-          arg [arm64] ==> ignore
-          arg [-platform_version] ==> ignore
-          arg [macos] ==> ignore
-          arg [15.0.0] ==> ignore
-          arg [15.5] ==> ignore
-          arg [-syslibroot] ==> ignore
-          arg [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk] ==> ignore
-          arg [-mllvm] ==> ignore
-          arg [-enable-linkonceodr-outlining] ==> ignore
-          arg [-o] ==> ignore
-          arg [cmTC_b0ffb] ==> ignore
-          arg [-search_paths_first] ==> ignore
-          arg [-headerpad_max_install_names] ==> ignore
-          arg [-v] ==> ignore
-          arg [CMakeFiles/cmTC_b0ffb.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
-          arg [-lc++] ==> lib [c++]
-          arg [-lSystem] ==> lib [System]
-          arg [/Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a] ==> lib [/Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a]
-        linker tool for 'CXX': /Library/Developer/CommandLineTools/usr/bin/ld
+        ignore line: [c++: \x1b[0;1;35mwarning: \x1b[0m\x1b[1m-Wl,-v: 'linker' input unused [-Wunused-command-line-argument]\x1b[0m;ignoring nonexistent directory "/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"; "/Library/Developer/CommandLineTools/usr/bin/clang" -cc1 -triple arm64-apple-macosx15.0.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -target-sdk-version=15.5 -fvisibility-inlines-hidden-static-local-var -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -target-cpu apple-m1 -target-feature +zcm -target-feature +zcz -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb "-fdebug-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-WRWPTH" -target-linker-version 1167.5 -v "-fcoverage-compilation-dir=/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-WRWPTH" -resource-dir /Library/Developer/CommandLineTools/usr/lib/clang/17 -dependency-file CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1 -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/usr/lib/clang/17/include -internal-externc-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include -internal-externc-isystem /Library/Developer/CommandLineTools/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -fdeprecated-macro -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fno-cxx-modules -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -fmax-type-align=16 -fcommon -fcolor-diagnostics -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o -x c++ /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp;clang -cc1 version 17.0.0 (clang-1700.0.13.5) default target arm64-apple-darwin24.6.0;ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/local/include";ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/SubFrameworks";ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/Library/Frameworks";#include "..." search starts here:;#include <...> search starts here:; /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1; /Library/Developer/CommandLineTools/usr/lib/clang/17/include; /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include; /Library/Developer/CommandLineTools/usr/include; /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks (framework directory);End of search list.;Linking CXX executable cmTC_c89bb;/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c89bb.dir/link.txt --verbose=1;Apple clang version 17.0.0 (clang-1700.0.13.5);Target: arm64-apple-darwin24.6.0;Thread model: posix;InstalledDir: /Library/Developer/CommandLineTools/usr/bin; "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -lto_library /Library/Developer/CommandLineTools/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 15.0.0 15.5 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_c89bb -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a;@(#)PROGRAM:ld PROJECT:ld-1167.5;BUILD 01:45:05 Apr 30 2025;configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em;will use ld-classic for: armv6 armv7 armv7s i386 armv6m armv7k armv7m armv7em;LTO support using: LLVM version 17.0.0 (static support for 29, runtime is 29);TAPI support using: Apple TAPI version 17.0.0 (tapi-1700.0.3.5);Library search paths:;	/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib;	/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib/swift;Framework search paths:;	/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks;/Library/Developer/CommandLineTools/usr/bin/c++  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_c89bb.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_c89bb;;]
         Library search paths: [;/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib;/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib/swift]
         Framework search paths: [;/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks]
-        remove lib [System]
-        remove lib [/Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a]
         collapse library dir [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib] ==> [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib]
         collapse library dir [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib/swift] ==> [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib/swift]
         collapse framework dir [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks] ==> [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks]
-        implicit libs: [c++]
+        implicit libs: []
         implicit objs: []
         implicit dirs: [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib;/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/lib/swift]
         implicit fwks: [/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks]
       
       
   -
-    kind: "message-v1"
-    backtrace:
-      - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
-      - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
-      - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
-    message: |
-      Running the CXX compiler's linker: "/Library/Developer/CommandLineTools/usr/bin/ld" "-v"
-      @(#)PROGRAM:ld PROJECT:ld-1167.5
-      BUILD 01:45:05 Apr 30 2025
-      configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em
-      will use ld-classic for: armv6 armv7 armv7s i386 armv6m armv7k armv7m armv7em
-      LTO support using: LLVM version 17.0.0 (static support for 29, runtime is 29)
-      TAPI support using: Apple TAPI version 17.0.0 (tapi-1700.0.3.5)
-...
-
----
-events:
-  -
     kind: "try_compile-v1"
     backtrace:
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:252 (try_compile)"
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:522 (_OPENMP_GET_FLAGS)"
-      - "CMakeLists.txt:7 (find_package)"
+      - "CMakeLists.txt:12 (find_package)"
     description: "Detecting C OpenMP compiler info"
     directories:
-      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-2xZyZm"
-      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-2xZyZm"
+      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-iKgbHh"
+      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-iKgbHh"
     cmakeVariables:
       CMAKE_C_FLAGS: ""
       CMAKE_C_FLAGS_DEBUG: "-g"
@@ -483,101 +352,30 @@ events:
       variable: "OpenMP_COMPILE_RESULT_C_Xclang fopenmp"
       cached: true
       stdout: |
-        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-2xZyZm'
+        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-iKgbHh'
         
-        Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_ce4e9
-        [1/2] /Library/Developer/CommandLineTools/usr/bin/cc   -Xclang -fopenmp -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_ce4e9.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_ce4e9.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_ce4e9.dir/OpenMPTryFlag.c.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-2xZyZm/OpenMPTryFlag.c'
-        FAILED: CMakeFiles/cmTC_ce4e9.dir/OpenMPTryFlag.c.o 
-        /Library/Developer/CommandLineTools/usr/bin/cc   -Xclang -fopenmp -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_ce4e9.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_ce4e9.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_ce4e9.dir/OpenMPTryFlag.c.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-2xZyZm/OpenMPTryFlag.c'
-        /Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-2xZyZm/OpenMPTryFlag.c:2:10: fatal error: 'omp.h' file not found
-            2 | #include <omp.h>
-              |          ^~~~~~~
-        1 error generated.
-        ninja: build stopped: subcommand failed.
+        Run Build Command(s): /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_337fa/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_337fa.dir/build.make CMakeFiles/cmTC_337fa.dir/build
+        Building C object CMakeFiles/cmTC_337fa.dir/OpenMPTryFlag.c.o
+        /Library/Developer/CommandLineTools/usr/bin/cc   -Xclang -fopenmp -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_337fa.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_337fa.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_337fa.dir/OpenMPTryFlag.c.o -c "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-iKgbHh/OpenMPTryFlag.c"
+        \x1b[1m/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-iKgbHh/OpenMPTryFlag.c:2:10: \x1b[0m\x1b[0;1;31mfatal error: \x1b[0m\x1b[1m'omp.h' file not found\x1b[0m
+            2 | #include <omp.h>\x1b[0m
+              | \x1b[0;1;32m         ^~~~~~~
+        \x1b[0m1 error generated.
+        make[1]: *** [CMakeFiles/cmTC_337fa.dir/OpenMPTryFlag.c.o] Error 1
+        make: *** [cmTC_337fa/fast] Error 2
         
-      exitCode: 1
-  -
-    kind: "try_compile-v1"
-    backtrace:
-      - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:252 (try_compile)"
-      - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:522 (_OPENMP_GET_FLAGS)"
-      - "CMakeLists.txt:7 (find_package)"
-    description: "Detecting CXX OpenMP compiler info"
-    directories:
-      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-g0DCzu"
-      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-g0DCzu"
-    cmakeVariables:
-      CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: "-g"
-      CMAKE_EXE_LINKER_FLAGS: ""
-      CMAKE_OSX_ARCHITECTURES: ""
-      CMAKE_OSX_DEPLOYMENT_TARGET: ""
-      CMAKE_OSX_SYSROOT: "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk"
-    buildResult:
-      variable: "OpenMP_COMPILE_RESULT_CXX_Xclang fopenmp"
-      cached: true
-      stdout: |
-        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-g0DCzu'
-        
-        Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_d5ec1
-        [1/2] /Library/Developer/CommandLineTools/usr/bin/c++   -Xclang -fopenmp -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_d5ec1.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_d5ec1.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_d5ec1.dir/OpenMPTryFlag.cpp.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-g0DCzu/OpenMPTryFlag.cpp'
-        FAILED: CMakeFiles/cmTC_d5ec1.dir/OpenMPTryFlag.cpp.o 
-        /Library/Developer/CommandLineTools/usr/bin/c++   -Xclang -fopenmp -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_d5ec1.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_d5ec1.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_d5ec1.dir/OpenMPTryFlag.cpp.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-g0DCzu/OpenMPTryFlag.cpp'
-        /Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-g0DCzu/OpenMPTryFlag.cpp:2:10: fatal error: 'omp.h' file not found
-            2 | #include <omp.h>
-              |          ^~~~~~~
-        1 error generated.
-        ninja: build stopped: subcommand failed.
-        
-      exitCode: 1
-...
-
----
-events:
-  -
-    kind: "try_compile-v1"
-    backtrace:
-      - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:252 (try_compile)"
-      - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:522 (_OPENMP_GET_FLAGS)"
-      - "CMakeLists.txt:16 (find_package)"
-    description: "Detecting C OpenMP compiler info"
-    directories:
-      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-iXZ5yh"
-      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-iXZ5yh"
-    cmakeVariables:
-      CMAKE_C_FLAGS: ""
-      CMAKE_C_FLAGS_DEBUG: "-g"
-      CMAKE_EXE_LINKER_FLAGS: ""
-      CMAKE_OSX_ARCHITECTURES: ""
-      CMAKE_OSX_DEPLOYMENT_TARGET: ""
-      CMAKE_OSX_SYSROOT: "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk"
-    buildResult:
-      variable: "OpenMP_COMPILE_RESULT_C_Xclang fopenmp"
-      cached: true
-      stdout: |
-        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-iXZ5yh'
-        
-        Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_402d6
-        [1/2] /Library/Developer/CommandLineTools/usr/bin/cc   -Xclang -fopenmp -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_402d6.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_402d6.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_402d6.dir/OpenMPTryFlag.c.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-iXZ5yh/OpenMPTryFlag.c'
-        FAILED: CMakeFiles/cmTC_402d6.dir/OpenMPTryFlag.c.o 
-        /Library/Developer/CommandLineTools/usr/bin/cc   -Xclang -fopenmp -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_402d6.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_402d6.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_402d6.dir/OpenMPTryFlag.c.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-iXZ5yh/OpenMPTryFlag.c'
-        /Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-iXZ5yh/OpenMPTryFlag.c:2:10: fatal error: 'omp.h' file not found
-            2 | #include <omp.h>
-              |          ^~~~~~~
-        1 error generated.
-        ninja: build stopped: subcommand failed.
-        
-      exitCode: 1
+      exitCode: 2
   -
     kind: "try_compile-v1"
     backtrace:
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:354 (try_compile)"
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:522 (_OPENMP_GET_FLAGS)"
-      - "CMakeLists.txt:16 (find_package)"
+      - "CMakeLists.txt:12 (find_package)"
     description: "Trying C OpenMP compiler with '/opt/homebrew/opt/libomp/lib/libomp.dylib'"
     directories:
-      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-6MtYDL"
-      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-6MtYDL"
+      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-xUmeI7"
+      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-xUmeI7"
     cmakeVariables:
       CMAKE_C_FLAGS: ""
       CMAKE_C_FLAGS_DEBUG: "-g"
@@ -589,29 +387,30 @@ events:
       variable: "OpenMP_COMPILE_RESULT_C_Xclang fopenmp"
       cached: true
       stdout: |
-        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-6MtYDL'
+        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-xUmeI7'
         
-        Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_bd76e
-        [1/2] /Library/Developer/CommandLineTools/usr/bin/cc   -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -Xclang -fopenmp -MD -MT CMakeFiles/cmTC_bd76e.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_bd76e.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_bd76e.dir/OpenMPTryFlag.c.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-6MtYDL/OpenMPTryFlag.c'
-        FAILED: CMakeFiles/cmTC_bd76e.dir/OpenMPTryFlag.c.o 
-        /Library/Developer/CommandLineTools/usr/bin/cc   -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -Xclang -fopenmp -MD -MT CMakeFiles/cmTC_bd76e.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_bd76e.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_bd76e.dir/OpenMPTryFlag.c.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-6MtYDL/OpenMPTryFlag.c'
-        /Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-6MtYDL/OpenMPTryFlag.c:2:10: fatal error: 'omp.h' file not found
-            2 | #include <omp.h>
-              |          ^~~~~~~
-        1 error generated.
-        ninja: build stopped: subcommand failed.
+        Run Build Command(s): /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_c1ce4/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_c1ce4.dir/build.make CMakeFiles/cmTC_c1ce4.dir/build
+        Building C object CMakeFiles/cmTC_c1ce4.dir/OpenMPTryFlag.c.o
+        /Library/Developer/CommandLineTools/usr/bin/cc   -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -Xclang -fopenmp -MD -MT CMakeFiles/cmTC_c1ce4.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_c1ce4.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_c1ce4.dir/OpenMPTryFlag.c.o -c "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-xUmeI7/OpenMPTryFlag.c"
+        \x1b[1m/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-xUmeI7/OpenMPTryFlag.c:2:10: \x1b[0m\x1b[0;1;31mfatal error: \x1b[0m\x1b[1m'omp.h' file not found\x1b[0m
+            2 | #include <omp.h>\x1b[0m
+              | \x1b[0;1;32m         ^~~~~~~
+        \x1b[0m1 error generated.
+        make[1]: *** [CMakeFiles/cmTC_c1ce4.dir/OpenMPTryFlag.c.o] Error 1
+        make: *** [cmTC_c1ce4/fast] Error 2
         
-      exitCode: 1
+      exitCode: 2
   -
     kind: "try_compile-v1"
     backtrace:
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:365 (try_compile)"
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:522 (_OPENMP_GET_FLAGS)"
-      - "CMakeLists.txt:16 (find_package)"
+      - "CMakeLists.txt:12 (find_package)"
     description: "Trying C OpenMP compiler with '/opt/homebrew/opt/libomp/lib/libomp.dylib' and '/opt/homebrew/opt/libomp/include'"
     directories:
-      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-KLeku0"
-      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-KLeku0"
+      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-uOrrBr"
+      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-uOrrBr"
     cmakeVariables:
       CMAKE_C_FLAGS: ""
       CMAKE_C_FLAGS_DEBUG: "-g"
@@ -623,11 +422,15 @@ events:
       variable: "OpenMP_COMPILE_RESULT_C_Xclang fopenmp"
       cached: true
       stdout: |
-        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-KLeku0'
+        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-uOrrBr'
         
-        Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_70aa7
-        [1/2] /Library/Developer/CommandLineTools/usr/bin/cc  -I/opt/homebrew/opt/libomp/include -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -Xclang -fopenmp -MD -MT CMakeFiles/cmTC_70aa7.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_70aa7.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_70aa7.dir/OpenMPTryFlag.c.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-KLeku0/OpenMPTryFlag.c'
-        [2/2] : && /Library/Developer/CommandLineTools/usr/bin/cc -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTC_70aa7.dir/OpenMPTryFlag.c.o -o cmTC_70aa7  /opt/homebrew/opt/libomp/lib/libomp.dylib && :
+        Run Build Command(s): /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_e0426/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_e0426.dir/build.make CMakeFiles/cmTC_e0426.dir/build
+        Building C object CMakeFiles/cmTC_e0426.dir/OpenMPTryFlag.c.o
+        /Library/Developer/CommandLineTools/usr/bin/cc  -I/opt/homebrew/opt/libomp/include -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -Xclang -fopenmp -MD -MT CMakeFiles/cmTC_e0426.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_e0426.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_e0426.dir/OpenMPTryFlag.c.o -c "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-uOrrBr/OpenMPTryFlag.c"
+        Linking C executable cmTC_e0426
+        /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e0426.dir/link.txt --verbose=1
+        /Library/Developer/CommandLineTools/usr/bin/cc  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_e0426.dir/OpenMPTryFlag.c.o -o cmTC_e0426  /opt/homebrew/opt/libomp/lib/libomp.dylib
         
       exitCode: 0
   -
@@ -635,11 +438,11 @@ events:
     backtrace:
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:252 (try_compile)"
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:522 (_OPENMP_GET_FLAGS)"
-      - "CMakeLists.txt:16 (find_package)"
+      - "CMakeLists.txt:12 (find_package)"
     description: "Detecting CXX OpenMP compiler info"
     directories:
-      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-BuFLWI"
-      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-BuFLWI"
+      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-pzr56S"
+      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-pzr56S"
     cmakeVariables:
       CMAKE_CXX_FLAGS: " -Xpreprocessor -fopenmp"
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -651,29 +454,30 @@ events:
       variable: "OpenMP_COMPILE_RESULT_CXX_Xclang fopenmp"
       cached: true
       stdout: |
-        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-BuFLWI'
+        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-pzr56S'
         
-        Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_cb230
-        [1/2] /Library/Developer/CommandLineTools/usr/bin/c++   -Xpreprocessor -fopenmp -Xclang -fopenmp -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_cb230.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_cb230.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_cb230.dir/OpenMPTryFlag.cpp.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-BuFLWI/OpenMPTryFlag.cpp'
-        FAILED: CMakeFiles/cmTC_cb230.dir/OpenMPTryFlag.cpp.o 
-        /Library/Developer/CommandLineTools/usr/bin/c++   -Xpreprocessor -fopenmp -Xclang -fopenmp -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_cb230.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_cb230.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_cb230.dir/OpenMPTryFlag.cpp.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-BuFLWI/OpenMPTryFlag.cpp'
-        /Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-BuFLWI/OpenMPTryFlag.cpp:2:10: fatal error: 'omp.h' file not found
-            2 | #include <omp.h>
-              |          ^~~~~~~
-        1 error generated.
-        ninja: build stopped: subcommand failed.
+        Run Build Command(s): /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_b5de0/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_b5de0.dir/build.make CMakeFiles/cmTC_b5de0.dir/build
+        Building CXX object CMakeFiles/cmTC_b5de0.dir/OpenMPTryFlag.cpp.o
+        /Library/Developer/CommandLineTools/usr/bin/c++   -Xpreprocessor -fopenmp -Xclang -fopenmp -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_b5de0.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_b5de0.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_b5de0.dir/OpenMPTryFlag.cpp.o -c "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-pzr56S/OpenMPTryFlag.cpp"
+        \x1b[1m/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-pzr56S/OpenMPTryFlag.cpp:2:10: \x1b[0m\x1b[0;1;31mfatal error: \x1b[0m\x1b[1m'omp.h' file not found\x1b[0m
+            2 | #include <omp.h>\x1b[0m
+              | \x1b[0;1;32m         ^~~~~~~
+        \x1b[0m1 error generated.
+        make[1]: *** [CMakeFiles/cmTC_b5de0.dir/OpenMPTryFlag.cpp.o] Error 1
+        make: *** [cmTC_b5de0/fast] Error 2
         
-      exitCode: 1
+      exitCode: 2
   -
     kind: "try_compile-v1"
     backtrace:
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:354 (try_compile)"
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:522 (_OPENMP_GET_FLAGS)"
-      - "CMakeLists.txt:16 (find_package)"
+      - "CMakeLists.txt:12 (find_package)"
     description: "Trying CXX OpenMP compiler with '/opt/homebrew/opt/libomp/lib/libomp.dylib'"
     directories:
-      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-530KDd"
-      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-530KDd"
+      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-FKjd1R"
+      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-FKjd1R"
     cmakeVariables:
       CMAKE_CXX_FLAGS: " -Xpreprocessor -fopenmp"
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -685,29 +489,30 @@ events:
       variable: "OpenMP_COMPILE_RESULT_CXX_Xclang fopenmp"
       cached: true
       stdout: |
-        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-530KDd'
+        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-FKjd1R'
         
-        Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_d4161
-        [1/2] /Library/Developer/CommandLineTools/usr/bin/c++   -Xpreprocessor -fopenmp  -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -Xclang -fopenmp -MD -MT CMakeFiles/cmTC_d4161.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_d4161.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_d4161.dir/OpenMPTryFlag.cpp.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-530KDd/OpenMPTryFlag.cpp'
-        FAILED: CMakeFiles/cmTC_d4161.dir/OpenMPTryFlag.cpp.o 
-        /Library/Developer/CommandLineTools/usr/bin/c++   -Xpreprocessor -fopenmp  -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -Xclang -fopenmp -MD -MT CMakeFiles/cmTC_d4161.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_d4161.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_d4161.dir/OpenMPTryFlag.cpp.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-530KDd/OpenMPTryFlag.cpp'
-        /Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-530KDd/OpenMPTryFlag.cpp:2:10: fatal error: 'omp.h' file not found
-            2 | #include <omp.h>
-              |          ^~~~~~~
-        1 error generated.
-        ninja: build stopped: subcommand failed.
+        Run Build Command(s): /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_e2646/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_e2646.dir/build.make CMakeFiles/cmTC_e2646.dir/build
+        Building CXX object CMakeFiles/cmTC_e2646.dir/OpenMPTryFlag.cpp.o
+        /Library/Developer/CommandLineTools/usr/bin/c++   -Xpreprocessor -fopenmp  -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -Xclang -fopenmp -MD -MT CMakeFiles/cmTC_e2646.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_e2646.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_e2646.dir/OpenMPTryFlag.cpp.o -c "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-FKjd1R/OpenMPTryFlag.cpp"
+        \x1b[1m/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-FKjd1R/OpenMPTryFlag.cpp:2:10: \x1b[0m\x1b[0;1;31mfatal error: \x1b[0m\x1b[1m'omp.h' file not found\x1b[0m
+            2 | #include <omp.h>\x1b[0m
+              | \x1b[0;1;32m         ^~~~~~~
+        \x1b[0m1 error generated.
+        make[1]: *** [CMakeFiles/cmTC_e2646.dir/OpenMPTryFlag.cpp.o] Error 1
+        make: *** [cmTC_e2646/fast] Error 2
         
-      exitCode: 1
+      exitCode: 2
   -
     kind: "try_compile-v1"
     backtrace:
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:365 (try_compile)"
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:522 (_OPENMP_GET_FLAGS)"
-      - "CMakeLists.txt:16 (find_package)"
+      - "CMakeLists.txt:12 (find_package)"
     description: "Trying CXX OpenMP compiler with '/opt/homebrew/opt/libomp/lib/libomp.dylib' and '/opt/homebrew/opt/libomp/include'"
     directories:
-      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-hBJ2PX"
-      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-hBJ2PX"
+      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-vSKmD6"
+      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-vSKmD6"
     cmakeVariables:
       CMAKE_CXX_FLAGS: " -Xpreprocessor -fopenmp"
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -719,11 +524,15 @@ events:
       variable: "OpenMP_COMPILE_RESULT_CXX_Xclang fopenmp"
       cached: true
       stdout: |
-        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-hBJ2PX'
+        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-vSKmD6'
         
-        Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_9e0cf
-        [1/2] /Library/Developer/CommandLineTools/usr/bin/c++  -I/opt/homebrew/opt/libomp/include -Xpreprocessor -fopenmp  -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -Xclang -fopenmp -MD -MT CMakeFiles/cmTC_9e0cf.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_9e0cf.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_9e0cf.dir/OpenMPTryFlag.cpp.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-hBJ2PX/OpenMPTryFlag.cpp'
-        [2/2] : && /Library/Developer/CommandLineTools/usr/bin/c++ -Xpreprocessor -fopenmp  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTC_9e0cf.dir/OpenMPTryFlag.cpp.o -o cmTC_9e0cf  /opt/homebrew/opt/libomp/lib/libomp.dylib && :
+        Run Build Command(s): /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_549a6/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_549a6.dir/build.make CMakeFiles/cmTC_549a6.dir/build
+        Building CXX object CMakeFiles/cmTC_549a6.dir/OpenMPTryFlag.cpp.o
+        /Library/Developer/CommandLineTools/usr/bin/c++  -I/opt/homebrew/opt/libomp/include -Xpreprocessor -fopenmp  -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics   -Xclang -fopenmp -MD -MT CMakeFiles/cmTC_549a6.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_549a6.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_549a6.dir/OpenMPTryFlag.cpp.o -c "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-vSKmD6/OpenMPTryFlag.cpp"
+        Linking CXX executable cmTC_549a6
+        /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_549a6.dir/link.txt --verbose=1
+        /Library/Developer/CommandLineTools/usr/bin/c++  -Xpreprocessor -fopenmp  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_549a6.dir/OpenMPTryFlag.cpp.o -o cmTC_549a6  /opt/homebrew/opt/libomp/lib/libomp.dylib
         
       exitCode: 0
   -
@@ -731,11 +540,11 @@ events:
     backtrace:
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:456 (try_compile)"
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:596 (_OPENMP_GET_SPEC_DATE)"
-      - "CMakeLists.txt:16 (find_package)"
+      - "CMakeLists.txt:12 (find_package)"
     description: "Detecting C OpenMP version"
     directories:
-      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-y7iry1"
-      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-y7iry1"
+      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-p90pVO"
+      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-p90pVO"
     cmakeVariables:
       CMAKE_C_FLAGS: ""
       CMAKE_C_FLAGS_DEBUG: "-g"
@@ -747,11 +556,15 @@ events:
       variable: "OpenMP_SPECTEST_C_"
       cached: true
       stdout: |
-        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-y7iry1'
+        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-p90pVO'
         
-        Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_a8455
-        [1/2] /Library/Developer/CommandLineTools/usr/bin/cc  -I/opt/homebrew/opt/libomp/include -Xclang -fopenmp -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_a8455.dir/OpenMPCheckVersion.c.o -MF CMakeFiles/cmTC_a8455.dir/OpenMPCheckVersion.c.o.d -o CMakeFiles/cmTC_a8455.dir/OpenMPCheckVersion.c.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-y7iry1/OpenMPCheckVersion.c'
-        [2/2] : && /Library/Developer/CommandLineTools/usr/bin/cc -Xclang -fopenmp -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTC_a8455.dir/OpenMPCheckVersion.c.o -o cmTC_a8455   && :
+        Run Build Command(s): /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_910d9/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_910d9.dir/build.make CMakeFiles/cmTC_910d9.dir/build
+        Building C object CMakeFiles/cmTC_910d9.dir/OpenMPCheckVersion.c.o
+        /Library/Developer/CommandLineTools/usr/bin/cc  -I/opt/homebrew/opt/libomp/include -Xclang -fopenmp -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_910d9.dir/OpenMPCheckVersion.c.o -MF CMakeFiles/cmTC_910d9.dir/OpenMPCheckVersion.c.o.d -o CMakeFiles/cmTC_910d9.dir/OpenMPCheckVersion.c.o -c "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-p90pVO/OpenMPCheckVersion.c"
+        Linking C executable cmTC_910d9
+        /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_910d9.dir/link.txt --verbose=1
+        /Library/Developer/CommandLineTools/usr/bin/cc  -Xclang -fopenmp -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_910d9.dir/OpenMPCheckVersion.c.o -o cmTC_910d9
         
       exitCode: 0
   -
@@ -759,11 +572,11 @@ events:
     backtrace:
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:456 (try_compile)"
       - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.31/Modules/FindOpenMP.cmake:596 (_OPENMP_GET_SPEC_DATE)"
-      - "CMakeLists.txt:16 (find_package)"
+      - "CMakeLists.txt:12 (find_package)"
     description: "Detecting CXX OpenMP version"
     directories:
-      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-XdOqJz"
-      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-XdOqJz"
+      source: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-OQAhto"
+      binary: "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-OQAhto"
     cmakeVariables:
       CMAKE_CXX_FLAGS: " -Xpreprocessor -fopenmp"
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -775,11 +588,15 @@ events:
       variable: "OpenMP_SPECTEST_CXX_"
       cached: true
       stdout: |
-        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-XdOqJz'
+        Change Dir: '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-OQAhto'
         
-        Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_ba3bf
-        [1/2] /Library/Developer/CommandLineTools/usr/bin/c++  -I/opt/homebrew/opt/libomp/include -Xpreprocessor -fopenmp -Xclang -fopenmp -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_ba3bf.dir/OpenMPCheckVersion.cpp.o -MF CMakeFiles/cmTC_ba3bf.dir/OpenMPCheckVersion.cpp.o.d -o CMakeFiles/cmTC_ba3bf.dir/OpenMPCheckVersion.cpp.o -c '/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShift/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-XdOqJz/OpenMPCheckVersion.cpp'
-        [2/2] : && /Library/Developer/CommandLineTools/usr/bin/c++ -Xpreprocessor -fopenmp -Xclang -fopenmp -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTC_ba3bf.dir/OpenMPCheckVersion.cpp.o -o cmTC_ba3bf   && :
+        Run Build Command(s): /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_f9bda/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_f9bda.dir/build.make CMakeFiles/cmTC_f9bda.dir/build
+        Building CXX object CMakeFiles/cmTC_f9bda.dir/OpenMPCheckVersion.cpp.o
+        /Library/Developer/CommandLineTools/usr/bin/c++  -I/opt/homebrew/opt/libomp/include -Xpreprocessor -fopenmp -Xclang -fopenmp -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_f9bda.dir/OpenMPCheckVersion.cpp.o -MF CMakeFiles/cmTC_f9bda.dir/OpenMPCheckVersion.cpp.o.d -o CMakeFiles/cmTC_f9bda.dir/OpenMPCheckVersion.cpp.o -c "/Users/acciafranci/Documents/AI UNIFI/PARALLEL PROGRAMMING/MeanShiftParallel/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-OQAhto/OpenMPCheckVersion.cpp"
+        Linking CXX executable cmTC_f9bda
+        /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f9bda.dir/link.txt --verbose=1
+        /Library/Developer/CommandLineTools/usr/bin/c++  -Xpreprocessor -fopenmp -Xclang -fopenmp -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_f9bda.dir/OpenMPCheckVersion.cpp.o -o cmTC_f9bda
         
       exitCode: 0
 ...

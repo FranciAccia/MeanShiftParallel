@@ -90,11 +90,25 @@ void mean_shift_par(const std::vector<Point>& points, std::vector<Point>& shifte
     }
 }
 
+void print_progress(int current_iter, int total_iters, std::string prefix) {
+    int bar_width = 50; // Lunghezza della barra in caratteri
+    float progress = (float)(current_iter + 1) / total_iters;
+
+    std::cout << "\r" << prefix << " ["; // \r riporta il cursore a inizio riga
+    int pos = bar_width * progress;
+    for (int i = 0; i < bar_width; ++i) {
+        if (i < pos) std::cout << "=";
+        else if (i == pos) std::cout << ">";
+        else std::cout << " ";
+    }
+    std::cout << "] " << int(progress * 100.0) << " %" << std::flush;
+}
+
 int main() {
     // --- CONFIG ---
     const char* input_file = "input.jpg";
-    double bandwidth = 20.0; // Più alto = colori più "piatti" (posterizzazione)
-    int iterations = 5;      // Bastano poche iterazioni
+    double bandwidth = 30.0; // Più alto = colori più "piatti" (posterizzazione)
+    int iterations = 3;      // Bastano poche iterazioni
 
     int width, height, channels;
     unsigned char* img_data = stbi_load(input_file, &width, &height, &channels, 3);
@@ -106,13 +120,6 @@ int main() {
 
     int num_pixels = width * height;
     std::cout << "Immagine caricata: " << width << "x" << height << " (" << num_pixels << " pixel)" << std::endl;
-
-    // Safety check
-    if (num_pixels > 10000) {
-        std::cout << "\n[ATTENZIONE] L'immagine e' grande (" << num_pixels << " px)." << std::endl;
-        std::cout << "L'algoritmo O(N^2) sara' LENTO in sequenziale." << std::endl;
-        std::cout << "Si consiglia di ridimensionare l'immagine a max 100x100 pixel per i test." << std::endl;
-    }
 
     // Data conversion for vefiry points
     std::vector<Point> points_initial(num_pixels);
@@ -134,27 +141,36 @@ int main() {
     std::cout << "Inizio Benchmark (Iterations: " << iterations << ", Bandwidth: " << bandwidth << ")" << std::endl;
     std::cout << "------------------------------------------------" << std::endl;
 
-    // --- 2. SEQUENTIAL TEST ---
+    // --- 2. TEST SEQUENZIALE ---
     std::cout << "Esecuzione Sequenziale in corso..." << std::endl;
     auto start_seq = std::chrono::high_resolution_clock::now();
 
     for (int iter = 0; iter < iterations; ++iter) {
         mean_shift_seq(data_seq, buffer_seq, bandwidth);
         data_seq = buffer_seq;
+
+        // AGGIORNAMENTO BARRA
+        print_progress(iter, iterations, "Seq");
     }
+    std::cout << std::endl; // Vai a capo alla fine del caricamento
 
     auto end_seq = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> time_seq = end_seq - start_seq;
     std::cout << ">> Tempo Sequenziale: " << time_seq.count() << " s" << std::endl;
+    std::cout << "------------------------------------------------" << std::endl;
 
-    // --- 3. PARALLEL TEST ---
+    // --- 3. TEST PARALLELO ---
     std::cout << "Esecuzione Parallela in corso (" << omp_get_max_threads() << " threads)..." << std::endl;
     auto start_par = std::chrono::high_resolution_clock::now();
 
     for (int iter = 0; iter < iterations; ++iter) {
         mean_shift_par(data_par, buffer_par, bandwidth);
         data_par = buffer_par;
+
+        // AGGIORNAMENTO BARRA
+        print_progress(iter, iterations, "Par");
     }
+    std::cout << std::endl; // Vai a capo
 
     auto end_par = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> time_par = end_par - start_par;

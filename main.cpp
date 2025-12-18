@@ -3,18 +3,28 @@
 #include <cmath>
 #include <chrono>
 #include <omp.h>
-#include <algorithm> // per std::min, std::max
+#include <algorithm>
+#include <numeric>
+#include <iomanip>
+#include <filesystem> // Richiede C++17
+
+// Alias per brevità
+namespace fs = std::filesystem;
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-struct Point {
-    double r, g, b;
-};
+// --- CONFIGURAZIONE ---
+const int TARGET_PIXELS = 10000; // Riduciamo un po' per processare molte immagini velocemente
+const double BANDWIDTH = 25.0;
+const std::string DATASET_FOLDER = "coco_dataset"; // Nome della cartella con le immagini
+const std::string OUTPUT_FOLDER = "output_coco";   // Dove salvare i risultati
 
-inline double get_dist_sq(const Point& p1, const Point& p2) {
+struct Pixel { double r, g, b; };
+
+inline double get_color_dist_sq(const Pixel& p1, const Pixel& p2) {
     double dr = p1.r - p2.r;
     double dg = p1.g - p2.g;
     double db = p1.b - p2.b;
@@ -25,173 +35,176 @@ inline double gaussian_kernel(double dist_sq, double bandwidth) {
     return std::exp(-dist_sq / (2 * bandwidth * bandwidth));
 }
 
-// ==========================================
-// 1. VERSIONE SEQUENZIALE
-// ==========================================
-void mean_shift_seq(const std::vector<Point>& points, std::vector<Point>& shifted_points, double bandwidth) {
-    int n = points.size();
-
+// --- ALGORITMO SEQUENZIALE ---
+void mean_shift_seq(const std::vector<Pixel>& pixels, std::vector<Pixel>& shifted_pixels, double bandwidth) {
+    int n = pixels.size();
     for (int i = 0; i < n; ++i) {
         double new_r = 0, new_g = 0, new_b = 0;
         double total_weight = 0;
-
         for (int j = 0; j < n; ++j) {
-            double dist_sq = get_dist_sq(points[i], points[j]);
-
-            // Cutoff optimization
+            double dist_sq = get_color_dist_sq(pixels[i], pixels[j]);
             if (dist_sq > 9 * bandwidth * bandwidth) continue;
-
             double weight = gaussian_kernel(dist_sq, bandwidth);
-            new_r += points[j].r * weight;
-            new_g += points[j].g * weight;
-            new_b += points[j].b * weight;
+            new_r += pixels[j].r * weight;
+            new_g += pixels[j].g * weight;
+            new_b += pixels[j].b * weight;
             total_weight += weight;
         }
-
         if (total_weight > 0) {
-            shifted_points[i].r = new_r / total_weight;
-            shifted_points[i].g = new_g / total_weight;
-            shifted_points[i].b = new_b / total_weight;
+            shifted_pixels[i].r = new_r / total_weight;
+            shifted_pixels[i].g = new_g / total_weight;
+            shifted_pixels[i].b = new_b / total_weight;
         }
     }
 }
 
-// ==========================================
-// 2. VERSIONE PARALLELA
-// ==========================================
-void mean_shift_par(const std::vector<Point>& points, std::vector<Point>& shifted_points, double bandwidth) {
-    int n = points.size();
-
-    // schedule(dynamic): alcuni pixel richiedono meno tempo rispetto ad altri
+// --- ALGORITMO PARALLELO ---
+void mean_shift_par(const std::vector<Pixel>& pixels, std::vector<Pixel>& shifted_pixels, double bandwidth) {
+    int n = pixels.size();
     #pragma omp parallel for schedule(dynamic)
     for (int i = 0; i < n; ++i) {
         double new_r = 0, new_g = 0, new_b = 0;
         double total_weight = 0;
-
-        // Vettorizzazione SIMD sui calcoli interni
         #pragma omp simd reduction(+:new_r, new_g, new_b, total_weight)
         for (int j = 0; j < n; ++j) {
-            double dist_sq = get_dist_sq(points[i], points[j]);
-
+            double dist_sq = get_color_dist_sq(pixels[i], pixels[j]);
             if (dist_sq > 9 * bandwidth * bandwidth) continue;
-
             double weight = gaussian_kernel(dist_sq, bandwidth);
-            new_r += points[j].r * weight;
-            new_g += points[j].g * weight;
-            new_b += points[j].b * weight;
+            new_r += pixels[j].r * weight;
+            new_g += pixels[j].g * weight;
+            new_b += pixels[j].b * weight;
             total_weight += weight;
         }
-
         if (total_weight > 0) {
-            shifted_points[i].r = new_r / total_weight;
-            shifted_points[i].g = new_g / total_weight;
-            shifted_points[i].b = new_b / total_weight;
+            shifted_pixels[i].r = new_r / total_weight;
+            shifted_pixels[i].g = new_g / total_weight;
+            shifted_pixels[i].b = new_b / total_weight;
         }
     }
-}
-
-void print_progress(int current_iter, int total_iters, std::string prefix) {
-    int bar_width = 50; // Lunghezza della barra in caratteri
-    float progress = (float)(current_iter + 1) / total_iters;
-
-    std::cout << "\r" << prefix << " ["; // \r riporta il cursore a inizio riga
-    int pos = bar_width * progress;
-    for (int i = 0; i < bar_width; ++i) {
-        if (i < pos) std::cout << "=";
-        else if (i == pos) std::cout << ">";
-        else std::cout << " ";
-    }
-    std::cout << "] " << int(progress * 100.0) << " %" << std::flush;
 }
 
 int main() {
-    // --- CONFIG ---
-    const char* input_file = "input.jpg";
-    double bandwidth = 30.0; // Più alto = colori più "piatti" (posterizzazione)
-    int iterations = 3;      // Bastano poche iterazioni
+    // 1. PREPARAZIONE CARTELLE
+    if (!fs::exists(DATASET_FOLDER)) {
+        std::cerr << "ERRORE: Cartella '" << DATASET_FOLDER << "' non trovata!" << std::endl;
+        std::cerr << "Crea la cartella e inserisci dentro le immagini COCO." << std::endl;
+        return 1;
+    }
+    if (!fs::exists(OUTPUT_FOLDER)) {
+        fs::create_directory(OUTPUT_FOLDER);
+    }
 
-    int width, height, channels;
-    unsigned char* img_data = stbi_load(input_file, &width, &height, &channels, 3);
+    std::cout << ">> Scansione dataset COCO in '" << DATASET_FOLDER << "'..." << std::endl;
+    std::vector<fs::path> image_files;
+    for (const auto& entry : fs::directory_iterator(DATASET_FOLDER)) {
+        auto ext = entry.path().extension().string();
+        // Controllo estensione semplice (lowercase check sarebbe meglio ma richiede <cctype>)
+        if (ext == ".jpg" || ext == ".png" || ext == ".jpeg" || ext == ".JPG") {
+            image_files.push_back(entry.path());
+        }
+    }
 
-    if (!img_data) {
-        std::cerr << "ERRORE: Immagine non trovata! Inserisci 'input.jpg' nella cartella di build." << std::endl;
+    if (image_files.empty()) {
+        std::cerr << "Nessuna immagine trovata." << std::endl;
         return 1;
     }
 
-    int num_pixels = width * height;
-    std::cout << "Immagine caricata: " << width << "x" << height << " (" << num_pixels << " pixel)" << std::endl;
+    std::cout << ">> Trovate " << image_files.size() << " immagini." << std::endl;
 
-    // Data conversion for vefiry points
-    std::vector<Point> points_initial(num_pixels);
-    for (int i = 0; i < num_pixels; ++i) {
-        points_initial[i].r = static_cast<double>(img_data[i * 3 + 0]);
-        points_initial[i].g = static_cast<double>(img_data[i * 3 + 1]);
-        points_initial[i].b = static_cast<double>(img_data[i * 3 + 2]);
+    // Variabili per statistiche globali
+    double total_time_seq = 0.0;
+    double total_time_par = 0.0;
+    int processed_count = 0;
+
+    // 2. CICLO SU OGNI IMMAGINE
+    for (const auto& filepath : image_files) {
+        std::string filename = filepath.filename().string();
+        std::cout << "\n[" << processed_count + 1 << "/" << image_files.size() << "] Elaborazione " << filename << "..." << std::endl;
+
+        int w, h, c;
+        unsigned char* img_data = stbi_load(filepath.string().c_str(), &w, &h, &c, 3);
+        if (!img_data) {
+            std::cerr << "  Errore caricamento. Salto." << std::endl;
+            continue;
+        }
+
+        // Conversione e Ridimensionamento (Obbligatorio per O(N^2))
+        std::vector<Pixel> pixels;
+        // Se l'immagine è troppo grande, prendiamo solo un subset o facciamo resize "brutale" (skip pixel)
+        // Qui facciamo un semplice downsampling se necessario per stare nei TARGET_PIXELS
+        int step = 1;
+        int total_raw_pixels = w * h;
+        if (total_raw_pixels > TARGET_PIXELS) {
+            step = std::sqrt(total_raw_pixels / TARGET_PIXELS) + 1;
+        }
+
+        for (int y = 0; y < h; y += step) {
+            for (int x = 0; x < w; x += step) {
+                int idx = (y * w + x) * 3;
+                pixels.push_back({(double)img_data[idx], (double)img_data[idx+1], (double)img_data[idx+2]});
+            }
+        }
+        stbi_image_free(img_data);
+
+        // Se dopo il resize abbiamo troppi pochi pixel (es. icona piccola), saltiamo
+        if (pixels.size() < 1000) {
+            std::cout << "  Troppo piccola (" << pixels.size() << " px). Salto." << std::endl;
+            continue;
+        }
+
+        // Limitiamo esattamente al target per coerenza nei tempi
+        if (pixels.size() > TARGET_PIXELS) pixels.resize(TARGET_PIXELS);
+
+        std::vector<Pixel> buffer = pixels;
+        int n = pixels.size();
+
+        // --- BENCHMARK SEQUENZIALE ---
+        auto t1 = std::chrono::high_resolution_clock::now();
+        mean_shift_seq(pixels, buffer, BANDWIDTH);
+        auto t2 = std::chrono::high_resolution_clock::now();
+        double dt_seq = std::chrono::duration<double>(t2 - t1).count();
+        total_time_seq += dt_seq;
+
+        // --- BENCHMARK PARALLELO ---
+        // Reset buffer
+        std::vector<Pixel> input_par = pixels;
+        std::vector<Pixel> output_par = pixels;
+
+        auto t3 = std::chrono::high_resolution_clock::now();
+        mean_shift_par(input_par, output_par, BANDWIDTH);
+        auto t4 = std::chrono::high_resolution_clock::now();
+        double dt_par = std::chrono::duration<double>(t4 - t3).count();
+        total_time_par += dt_par;
+
+        std::cout << "  Pixels: " << n << " | Seq: " << dt_seq << "s | Par: " << dt_par << "s | Speedup: " << std::fixed << std::setprecision(2) << dt_seq/dt_par << "x" << std::endl;
+
+        // Salvataggio output (visualizzazione risultato)
+        // Ricostruiamo un'immagine quadrata fittizia dai pixel segmentati
+        int out_w = std::sqrt(n);
+        int out_h = n / out_w;
+        std::vector<unsigned char> out_data(out_w * out_h * 3);
+        for(int i=0; i<out_w*out_h; ++i) {
+            out_data[i*3] = (unsigned char)std::min(255.0, std::max(0.0, output_par[i].r));
+            out_data[i*3+1] = (unsigned char)std::min(255.0, std::max(0.0, output_par[i].g));
+            out_data[i*3+2] = (unsigned char)std::min(255.0, std::max(0.0, output_par[i].b));
+        }
+        std::string out_path = OUTPUT_FOLDER + "/seg_" + filename;
+        stbi_write_png(out_path.c_str(), out_w, out_h, 3, out_data.data(), out_w*3);
+
+        processed_count++;
     }
-    stbi_image_free(img_data);
 
-    // Two different copies of the image for the diff tests
-    std::vector<Point> data_seq = points_initial;
-    std::vector<Point> buffer_seq = points_initial;
+    // 3. REPORT FINALE
+    std::cout << "\n==========================================" << std::endl;
+    std::cout << "RISULTATI COMPLESSIVI SU " << processed_count << " IMMAGINI" << std::endl;
+    std::cout << "==========================================" << std::endl;
+    std::cout << "Tempo Totale Sequenziale: " << total_time_seq << " s" << std::endl;
+    std::cout << "Tempo Totale Parallelo:   " << total_time_par << " s" << std::endl;
 
-    std::vector<Point> data_par = points_initial;
-    std::vector<Point> buffer_par = points_initial;
-
-    std::cout << "------------------------------------------------" << std::endl;
-    std::cout << "Inizio Benchmark (Iterations: " << iterations << ", Bandwidth: " << bandwidth << ")" << std::endl;
-    std::cout << "------------------------------------------------" << std::endl;
-
-    // --- 2. TEST SEQUENZIALE ---
-    std::cout << "Esecuzione Sequenziale in corso..." << std::endl;
-    auto start_seq = std::chrono::high_resolution_clock::now();
-
-    for (int iter = 0; iter < iterations; ++iter) {
-        mean_shift_seq(data_seq, buffer_seq, bandwidth);
-        data_seq = buffer_seq;
-
-        // AGGIORNAMENTO BARRA
-        print_progress(iter, iterations, "Seq");
+    if (total_time_par > 0) {
+        double avg_speedup = total_time_seq / total_time_par;
+        std::cout << "SPEEDUP MEDIO: " << avg_speedup << "x" << std::endl;
     }
-    std::cout << std::endl; // Vai a capo alla fine del caricamento
-
-    auto end_seq = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> time_seq = end_seq - start_seq;
-    std::cout << ">> Tempo Sequenziale: " << time_seq.count() << " s" << std::endl;
-    std::cout << "------------------------------------------------" << std::endl;
-
-    // --- 3. TEST PARALLELO ---
-    std::cout << "Esecuzione Parallela in corso (" << omp_get_max_threads() << " threads)..." << std::endl;
-    auto start_par = std::chrono::high_resolution_clock::now();
-
-    for (int iter = 0; iter < iterations; ++iter) {
-        mean_shift_par(data_par, buffer_par, bandwidth);
-        data_par = buffer_par;
-
-        // AGGIORNAMENTO BARRA
-        print_progress(iter, iterations, "Par");
-    }
-    std::cout << std::endl; // Vai a capo
-
-    auto end_par = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> time_par = end_par - start_par;
-    std::cout << ">> Tempo Parallelo:   " << time_par.count() << " s" << std::endl;
-
-    // UTILS FOR THE REPORT
-    double speedup = time_seq.count() / time_par.count();
-    std::cout << "------------------------------------------------" << std::endl;
-    std::cout << "SPEEDUP OTTENUTO: " << speedup << "x" << std::endl;
-    std::cout << "------------------------------------------------" << std::endl;
-
-    // OUTPUT SAVE (JUST THE PARALLEL ONE)
-    std::vector<unsigned char> out_data(num_pixels * 3);
-    for (int i = 0; i < num_pixels; ++i) {
-        out_data[i * 3 + 0] = static_cast<unsigned char>(std::min(255.0, std::max(0.0, data_par[i].r)));
-        out_data[i * 3 + 1] = static_cast<unsigned char>(std::min(255.0, std::max(0.0, data_par[i].g)));
-        out_data[i * 3 + 2] = static_cast<unsigned char>(std::min(255.0, std::max(0.0, data_par[i].b)));
-    }
-
-    stbi_write_png("output_segmented.png", width, height, 3, out_data.data(), width * 3);
-    std::cout << "Immagine salvata come 'output_segmented.png'" << std::endl;
 
     return 0;
 }

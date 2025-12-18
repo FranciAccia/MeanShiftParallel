@@ -16,21 +16,21 @@ namespace fs = std::filesystem;
 #include "stb_image_write.h"
 
 // Configuration
-const int TARGET_PIXELS = 10000;
-const double BANDWIDTH = 25.0;
+const int TARGET_PIXELS = 20000; // target dimensionale pixel
+const double BANDWIDTH = 25.0; //soglia di somiglianza colore
 const std::string DATASET_FOLDER = "coco_dataset";
 const std::string OUTPUT_FOLDER = "output_coco";
 
 struct Pixel { double r, g, b; };
 
-inline double get_color_dist_sq(const Pixel& p1, const Pixel& p2) {
+inline double get_color_dist_sq(const Pixel& p1, const Pixel& p2) { // Calcola la distanza euclidea al quadrato tra due colori RGB.
     double dr = p1.r - p2.r;
     double dg = p1.g - p2.g;
     double db = p1.b - p2.b;
     return dr*dr + dg*dg + db*db;
 }
 
-inline double gaussian_kernel(double dist_sq, double bandwidth) {
+inline double gaussian_kernel(double dist_sq, double bandwidth) { // Calcola il peso di un pixel vicino. Quando due coliri sono simili il peso è alto.
     return std::exp(-dist_sq / (2 * bandwidth * bandwidth));
 }
 
@@ -188,7 +188,7 @@ int main() {
 
     //REPORT
     std::cout << "\n==========================================" << std::endl;
-    std::cout << "RISULTATI COMPLESSIVI SU " << processed_count << " IMMAGINI" << std::endl;
+    std::cout << "RISULTATI SU " << processed_count << " IMMAGINI" << std::endl;
     std::cout << "==========================================" << std::endl;
     std::cout << "Tempo Totale Sequenziale: " << total_time_seq << " s" << std::endl;
     std::cout << "Tempo Totale Parallelo:   " << total_time_par << " s" << std::endl;

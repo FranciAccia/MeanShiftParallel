@@ -6,9 +6,8 @@
 #include <algorithm>
 #include <numeric>
 #include <iomanip>
-#include <filesystem> // Richiede C++17
+#include <filesystem>
 
-// Alias per brevità
 namespace fs = std::filesystem;
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -16,11 +15,11 @@ namespace fs = std::filesystem;
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-// --- CONFIGURAZIONE ---
-const int TARGET_PIXELS = 10000; // Riduciamo un po' per processare molte immagini velocemente
+// Configuration
+const int TARGET_PIXELS = 10000;
 const double BANDWIDTH = 25.0;
-const std::string DATASET_FOLDER = "coco_dataset"; // Nome della cartella con le immagini
-const std::string OUTPUT_FOLDER = "output_coco";   // Dove salvare i risultati
+const std::string DATASET_FOLDER = "coco_dataset";
+const std::string OUTPUT_FOLDER = "output_coco";
 
 struct Pixel { double r, g, b; };
 
@@ -35,7 +34,7 @@ inline double gaussian_kernel(double dist_sq, double bandwidth) {
     return std::exp(-dist_sq / (2 * bandwidth * bandwidth));
 }
 
-// --- ALGORITMO SEQUENZIALE ---
+// --- Sequential ---
 void mean_shift_seq(const std::vector<Pixel>& pixels, std::vector<Pixel>& shifted_pixels, double bandwidth) {
     int n = pixels.size();
     for (int i = 0; i < n; ++i) {
@@ -58,7 +57,7 @@ void mean_shift_seq(const std::vector<Pixel>& pixels, std::vector<Pixel>& shifte
     }
 }
 
-// --- ALGORITMO PARALLELO ---
+// --- Parallel ---
 void mean_shift_par(const std::vector<Pixel>& pixels, std::vector<Pixel>& shifted_pixels, double bandwidth) {
     int n = pixels.size();
     #pragma omp parallel for schedule(dynamic)
@@ -84,7 +83,6 @@ void mean_shift_par(const std::vector<Pixel>& pixels, std::vector<Pixel>& shifte
 }
 
 int main() {
-    // 1. PREPARAZIONE CARTELLE
     if (!fs::exists(DATASET_FOLDER)) {
         std::cerr << "ERRORE: Cartella '" << DATASET_FOLDER << "' non trovata!" << std::endl;
         std::cerr << "Crea la cartella e inserisci dentro le immagini COCO." << std::endl;
@@ -111,12 +109,10 @@ int main() {
 
     std::cout << ">> Trovate " << image_files.size() << " immagini." << std::endl;
 
-    // Variabili per statistiche globali
     double total_time_seq = 0.0;
     double total_time_par = 0.0;
     int processed_count = 0;
 
-    // 2. CICLO SU OGNI IMMAGINE
     for (const auto& filepath : image_files) {
         std::string filename = filepath.filename().string();
         std::cout << "\n[" << processed_count + 1 << "/" << image_files.size() << "] Elaborazione " << filename << "..." << std::endl;
@@ -130,8 +126,7 @@ int main() {
 
         // Conversione e Ridimensionamento (Obbligatorio per O(N^2))
         std::vector<Pixel> pixels;
-        // Se l'immagine è troppo grande, prendiamo solo un subset o facciamo resize "brutale" (skip pixel)
-        // Qui facciamo un semplice downsampling se necessario per stare nei TARGET_PIXELS
+        // Se l'immagine è troppo grande, prendiamo solo un subset o facciamo resize "brutale"
         int step = 1;
         int total_raw_pixels = w * h;
         if (total_raw_pixels > TARGET_PIXELS) {
@@ -152,7 +147,6 @@ int main() {
             continue;
         }
 
-        // Limitiamo esattamente al target per coerenza nei tempi
         if (pixels.size() > TARGET_PIXELS) pixels.resize(TARGET_PIXELS);
 
         std::vector<Pixel> buffer = pixels;
@@ -166,7 +160,6 @@ int main() {
         total_time_seq += dt_seq;
 
         // --- BENCHMARK PARALLELO ---
-        // Reset buffer
         std::vector<Pixel> input_par = pixels;
         std::vector<Pixel> output_par = pixels;
 
@@ -178,8 +171,7 @@ int main() {
 
         std::cout << "  Pixels: " << n << " | Seq: " << dt_seq << "s | Par: " << dt_par << "s | Speedup: " << std::fixed << std::setprecision(2) << dt_seq/dt_par << "x" << std::endl;
 
-        // Salvataggio output (visualizzazione risultato)
-        // Ricostruiamo un'immagine quadrata fittizia dai pixel segmentati
+        // Salvataggio output
         int out_w = std::sqrt(n);
         int out_h = n / out_w;
         std::vector<unsigned char> out_data(out_w * out_h * 3);
@@ -194,7 +186,7 @@ int main() {
         processed_count++;
     }
 
-    // 3. REPORT FINALE
+    //REPORT
     std::cout << "\n==========================================" << std::endl;
     std::cout << "RISULTATI COMPLESSIVI SU " << processed_count << " IMMAGINI" << std::endl;
     std::cout << "==========================================" << std::endl;

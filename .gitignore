@@ -1,0 +1,65 @@
+# ==========================
+# 1. Compilazione & CMake (CLion)
+# ==========================
+cmake-build-debug/
+cmake-build-release/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cbp
+
+# Eseguibili compilati
+MeanShiftParallel
+*.o
+*.a
+*.dylib
+
+# ==========================
+# 2. IDE & Sistema Operativo
+# ==========================
+# macOS (Fondamentale per Apple Silicon)
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# CLion / JetBrains
+.idea/
+
+# VS Code (se qualcuno lo usa)
+.vscode/
+
+# ==========================
+# 3. Dataset & Immagini Input
+# ==========================
+# Ignora la cartella del dataset COCO (pesante!)
+coco_dataset/
+coco_dataset*/
+
+# Ignora file immagine sparsi nella root (per non caricare test a caso)
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.zip
+*.tar.gz
+
+# ==========================
+# 4. Output & Risultati
+# ==========================
+# Ignora le cartelle di output generate dal codice
+output_coco/
+output_images/
+
+# Ignora le immagini risultato specifiche
+output_benchmark.png
+output_final.png
+seg_*.png
+
+# ==========================
+# Eccezioni (File da mantenere)
+# ==========================
+# Se vuoi caricare un'immagine di test specifica, scommenta la riga sotto:
+# !input.jpg
+# !README.md

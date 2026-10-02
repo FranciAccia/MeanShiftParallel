@@ -37,17 +37,13 @@ const std::vector<std::string> SCHEDULES = {
     "dynamic,1", "dynamic,16", "dynamic,256",
     "guided",
 };
-// Pausa dopo ogni run, pari alla sua durata (al massimo MAX_COOLDOWN_S secondi). La macchina di
-// test è un MacBook Air M2 senza ventola: sotto carico continuo su tutti i core la frequenza
-// cala (thermal throttling, fino a +50% di tempo dopo ~2 minuti) e falserebbe i confronti tra
-// configurazioni misurate in sequenza. Con un duty cycle 1:1 i tempi restano stabili.
+// Pausa dopo ogni run pari alla sua durata (max 5 s): evita il thermal throttling del
+// MacBook Air M2 (senza ventola), che sotto carico continuo allunga i tempi fino al 50%.
 const double MAX_COOLDOWN_S = 5.0;
 
 const int CORRECTNESS_SIZE = 64;
-// Differenza massima ammessa tra i modi, come frazione del bandwidth. La convergenza si ferma
-// quando lo shift scende sotto eps·h = 0.001·h: con somme floating point in ordine diverso
-// (riduzione SIMD) due varianti si fermano in punti che distano qualche multiplo di eps·h.
-// Il criterio decisivo è che cluster ed etichette siano identici.
+// Differenza massima tra i modi, come frazione di h: la riduzione SIMD somma in ordine diverso,
+// quindi le varianti si fermano a pochi eps·h di distanza. Cluster ed etichette devono coincidere.
 const float CORRECTNESS_TOL = 0.01f;
 
 // ------------------------------------------------------------------------------------------
@@ -177,9 +173,8 @@ Params make_params(float bandwidth, int threads = 1, const std::string& schedule
 // Esperimenti
 // ------------------------------------------------------------------------------------------
 
-// [0] Verifica di correttezza: le varianti ottimizzate devono produrre gli stessi modi
-// (a meno di arrotondamenti floating point: la riduzione SIMD somma in ordine diverso),
-// lo stesso numero di cluster e le stesse etichette della baseline sequenziale.
+// [0] Verifica di correttezza: stessi modi (entro la tolleranza), stessi cluster e stesse
+// etichette della baseline sequenziale.
 bool exp_correctness(const std::string& images_dir) {
     std::printf("\n[0] Verifica di correttezza (immagini %dx%d, h = %g)\n", CORRECTNESS_SIZE,
                 CORRECTNESS_SIZE, MAIN_BANDWIDTH);

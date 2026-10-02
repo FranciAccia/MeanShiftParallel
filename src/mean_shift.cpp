@@ -29,12 +29,9 @@ Kernel make_kernel(const Params& p) {
     return {-1.0f / (2.0f * h2), 9.0f * h2, p.eps * p.eps * h2};
 }
 
-// exp(x) per x in [-4.5, 0] (l'intervallo usato dal kernel entro il cutoff): 2^(x·log2 e)
-// scomposto in 2^k · 2^f, con k intero (inserito direttamente nell'esponente IEEE 754) e
-// 2^f, f in [0, 1), approssimato con un polinomio di grado 5. Errore relativo < 4e-7, cioè
-// precisione float. A differenza di std::exp è codice inline senza chiamate né branch, quindi
-// il compilatore lo vettorizza completamente; la usano tutte le varianti, baseline compresa,
-// così il confronto seq vs simd misura solo l'effetto della vettorizzazione.
+// exp(x) per x in [-4.5, 0]: 2^k (nell'esponente IEEE 754) · polinomio di grado 5, errore < 4e-7.
+// A differenza di std::exp è inline e senza branch, quindi vettorizzabile. La usano tutte le
+// varianti, così seq vs simd misura solo l'effetto della vettorizzazione.
 inline float fast_exp(float x) {
     x = std::fmax(x, -4.5f);   // i punti oltre il cutoff vengono poi scartati: evita overflow
     const float t = x * 1.44269504f;
@@ -136,10 +133,8 @@ int converge_simd_aos(const Pixel* __restrict pts, int n, Pixel& y, const Kernel
 }
 
 // ------------------------------------------------------------------------------------------
-// Fase 1: shift di tutti i punti. Ogni punto converge in modo indipendente dagli altri
-// (si legge solo il dataset originale e si scrive solo modes[i]): niente race condition,
-// nessuna sincronizzazione necessaria. Il lavoro per punto varia (numero di iterazioni),
-// per questo lo scheduling è configurabile (schedule(runtime)).
+// Fase 1: shift di tutti i punti. Ogni punto è indipendente (si scrive solo modes[i]): nessuna
+// sincronizzazione. Le iterazioni variano per punto, quindi lo scheduling è configurabile.
 // ------------------------------------------------------------------------------------------
 
 long long shift_seq(const Dataset& d, const Params& p, const Kernel& k, std::vector<Pixel>& modes) {
@@ -189,10 +184,8 @@ long long shift_par_aos(const Dataset& d, const Params& p, const Kernel& k, std:
 }
 
 // ------------------------------------------------------------------------------------------
-// Fase 2: rilevamento dei modi. I punti di uno stesso bacino di attrazione convergono
-// (quasi) allo stesso modo: si scorrono i modi e ognuno diventa un nuovo centro solo se
-// non dista meno di merge_factor * h da un centro già trovato. Costo O(N·K), con K (numero
-// di cluster) piccolo: trascurabile rispetto alla fase 1, che è O(N²·iterazioni).
+// Fase 2: rilevamento dei modi. Un modo diventa un nuovo centro se dista almeno merge_factor·h
+// dai centri già trovati. Costo O(N·K), trascurabile rispetto alla fase 1 (O(N²·iterazioni)).
 // ------------------------------------------------------------------------------------------
 
 inline float dist2(const Pixel& a, const Pixel& b) {
@@ -200,8 +193,7 @@ inline float dist2(const Pixel& a, const Pixel& b) {
     return dr * dr + dg * dg + db * db;
 }
 
-// Ordine deterministico (indice dei pixel): sequenziale in tutte le varianti, così i centri
-// trovati non dipendono dal numero di thread.
+// Sequenziale in ordine di indice: i centri non dipendono dal numero di thread.
 std::vector<Pixel> find_centers(const std::vector<Pixel>& modes, float radius2) {
     std::vector<Pixel> centers;
     for (const Pixel& m : modes) {
@@ -250,8 +242,7 @@ Result mean_shift(const Dataset& data, const Params& params, Variant variant) {
 
     const float radius = params.merge_factor * params.bandwidth;
     res.centers = find_centers(res.modes, radius * radius);
-    // Etichettatura: ogni pixel al centro più vicino al suo modo; indipendente per pixel,
-    // quindi parallelizzabile senza sincronizzazione nelle varianti parallele.
+    // Etichettatura: ogni pixel al centro più vicino al suo modo (indipendente per pixel).
     #pragma omp parallel for schedule(static) if (parallel)
     for (int i = 0; i < n; ++i) {
         res.labels[i] = nearest_center(res.modes[i], res.centers);

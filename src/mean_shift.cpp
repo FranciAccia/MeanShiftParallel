@@ -7,14 +7,6 @@
 #include <cstdlib>
 #include <cstring>
 
-// La baseline sequenziale deve restare scalare: lo rendiamo esplicito per il compilatore
-// (senza -ffast-math clang non vettorizzerebbe comunque la riduzione floating point).
-#if defined(__clang__)
-#define NO_VECTORIZE _Pragma("clang loop vectorize(disable) interleave(disable)")
-#else
-#define NO_VECTORIZE
-#endif
-
 namespace {
 
 // Costanti del kernel gaussiano K(d²) = exp(-d² / (2h²)), calcolate una volta per esecuzione.
@@ -59,10 +51,8 @@ inline bool shift_and_check(Pixel& y, float sr, float sg, float sb, float sw, fl
     return dr * dr + dg * dg + db * db < eps2;
 }
 
-// ------------------------------------------------------------------------------------------
 // Convergenza di un singolo punto: y viene spostato iterativamente verso la media pesata
 // di tutti gli N punti del dataset (gradient ascent sulla KDE). Restituisce le iterazioni.
-// ------------------------------------------------------------------------------------------
 
 // Versione scalare (AoS): i punti oltre il cutoff vengono saltati con un branch.
 int converge_scalar(const Pixel* pts, int n, Pixel& y, const Kernel& k, int max_iter) {
@@ -70,7 +60,7 @@ int converge_scalar(const Pixel* pts, int n, Pixel& y, const Kernel& k, int max_
     while (it < max_iter) {
         ++it;
         float sr = 0.0f, sg = 0.0f, sb = 0.0f, sw = 0.0f;
-        NO_VECTORIZE
+        #pragma clang loop vectorize(disable) interleave(disable)   // la baseline resta scalare
         for (int j = 0; j < n; ++j) {
             const float dr = pts[j].r - y.r, dg = pts[j].g - y.g, db = pts[j].b - y.b;
             const float d2 = dr * dr + dg * dg + db * db;
@@ -132,10 +122,8 @@ int converge_simd_aos(const Pixel* __restrict pts, int n, Pixel& y, const Kernel
     return it;
 }
 
-// ------------------------------------------------------------------------------------------
 // Fase 1: shift di tutti i punti. Ogni punto è indipendente (si scrive solo modes[i]): nessuna
 // sincronizzazione. Le iterazioni variano per punto, quindi lo scheduling è configurabile.
-// ------------------------------------------------------------------------------------------
 
 long long shift_seq(const Dataset& d, const Params& p, const Kernel& k, std::vector<Pixel>& modes) {
     const int n = d.size();
@@ -183,10 +171,8 @@ long long shift_par_aos(const Dataset& d, const Params& p, const Kernel& k, std:
     return total;
 }
 
-// ------------------------------------------------------------------------------------------
 // Fase 2: rilevamento dei modi. Un modo diventa un nuovo centro se dista almeno merge_factor·h
 // dai centri già trovati. Costo O(N·K), trascurabile rispetto alla fase 1 (O(N²·iterazioni)).
-// ------------------------------------------------------------------------------------------
 
 inline float dist2(const Pixel& a, const Pixel& b) {
     const float dr = a.r - b.r, dg = a.g - b.g, db = a.b - b.b;

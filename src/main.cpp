@@ -31,7 +31,6 @@ void usage() {
                  "                          [--images DIR] [--results DIR] [--warmup N] [--reps N]\n";
 }
 
-// Restituisce il valore dell'opzione `name` (es. "--threads"), oppure `fallback` se assente.
 const char* option(int argc, char** argv, const char* name, const char* fallback) {
     for (int i = 1; i + 1 < argc; ++i) {
         if (std::strcmp(argv[i], name) == 0) return argv[i + 1];

@@ -18,10 +18,6 @@
 
 namespace {
 
-// ------------------------------------------------------------------------------------------
-// Configurazione degli esperimenti
-// ------------------------------------------------------------------------------------------
-
 const char* MAIN_IMAGE = "118015";                    // immagine principale (barche)
 const std::vector<std::string> ALL_IMAGES = {"118015", "108004", "145059"};
 const int MAIN_SIZE = 128;                            // 128x128: sequenziale ≥ 10 s con h = 12
@@ -37,18 +33,13 @@ const std::vector<std::string> SCHEDULES = {
     "dynamic,1", "dynamic,16", "dynamic,256",
     "guided",
 };
-// Pausa dopo ogni run pari alla sua durata (max 5 s): evita il thermal throttling del
-// MacBook Air M2 (senza ventola), che sotto carico continuo allunga i tempi fino al 50%.
+// Pausa dopo ogni run pari alla sua durata (max 5 s): evita il thermal throttling
 const double MAX_COOLDOWN_S = 5.0;
 
 const int CORRECTNESS_SIZE = 64;
 // Differenza massima tra i modi, come frazione di h: la riduzione SIMD somma in ordine diverso,
 // quindi le varianti si fermano a pochi eps·h di distanza. Cluster ed etichette devono coincidere.
 const float CORRECTNESS_TOL = 0.01f;
-
-// ------------------------------------------------------------------------------------------
-// Misura dei tempi
-// ------------------------------------------------------------------------------------------
 
 // Tempo CPU del processo (user + system), sommato su tutti i thread.
 double cpu_seconds() {
@@ -113,34 +104,26 @@ Measurement measure(const Dataset& data, const Params& params, Variant variant, 
     return m;
 }
 
-// ------------------------------------------------------------------------------------------
-// Output: una riga CSV per misura (stesso schema per tutti gli esperimenti) + stampa a terminale
-// ------------------------------------------------------------------------------------------
+std::ofstream open_csv(const std::string& path) {
+    std::ofstream csv(path);
+    csv << "image,size,n_pixels,variant,threads,schedule,bandwidth,reps,"
+           "mean_s,std_s,min_s,max_s,ci95_s,cpu_s,modes_s,clusters,avg_iter\n";
+    return csv;
+}
 
-class CsvWriter {
-public:
-    explicit CsvWriter(const std::string& path) : out_(path) {
-        out_ << "image,size,n_pixels,variant,threads,schedule,bandwidth,reps,"
-                "mean_s,std_s,min_s,max_s,ci95_s,cpu_s,modes_s,clusters,avg_iter\n";
-    }
-    void row(const std::string& image, const Dataset& data, Variant variant, const Params& p,
-             const Measurement& m) {
-        const bool parallel = (variant == Variant::Par || variant == Variant::ParAoS);
-        char line[512];
-        std::snprintf(line, sizeof(line),
-                      "%s,%d,%d,%s,%d,\"%s\",%g,%d,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%zu,%.2f\n",
-                      image.c_str(), data.width, data.size(), variant_name(variant),
-                      parallel ? p.threads : 1, parallel ? p.schedule.c_str() : "-", p.bandwidth,
-                      m.reps, m.mean, m.stdev, m.min, m.max, m.ci95, m.cpu_mean, m.modes_mean,
-                      m.clusters, m.avg_iter);
-        out_ << line;
-        out_.flush();
-    }
-    bool ok() const { return out_.good(); }
-
-private:
-    std::ofstream out_;
-};
+// Lo schedule è tra virgolette perché può contenere una virgola
+void write_row(std::ofstream& csv, const std::string& image, const Dataset& data, Variant variant,
+               const Params& p, const Measurement& m) {
+    const bool parallel = (variant == Variant::Par || variant == Variant::ParAoS);
+    char line[512];
+    std::snprintf(line, sizeof(line),
+                  "%s,%d,%d,%s,%d,\"%s\",%g,%d,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%zu,%.2f\n",
+                  image.c_str(), data.width, data.size(), variant_name(variant),
+                  parallel ? p.threads : 1, parallel ? p.schedule.c_str() : "-", p.bandwidth,
+                  m.reps, m.mean, m.stdev, m.min, m.max, m.ci95, m.cpu_mean, m.modes_mean,
+                  m.clusters, m.avg_iter);
+    csv << line << std::flush;
+}
 
 void print_measurement(const char* label, const Measurement& m, double baseline = 0.0) {
     std::printf("  %-28s %8.3f s ± %.3f  [min %.3f, max %.3f]  CPU %7.2f s  K=%zu  iter=%.1f",
@@ -169,14 +152,9 @@ Params make_params(float bandwidth, int threads = 1, const std::string& schedule
     return p;
 }
 
-// ------------------------------------------------------------------------------------------
-// Esperimenti
-// ------------------------------------------------------------------------------------------
-
-// [0] Verifica di correttezza: stessi modi (entro la tolleranza), stessi cluster e stesse
-// etichette della baseline sequenziale.
+// Verifica di correttezza: stessi modi (entro la tolleranza), stessi cluster e stesse etichette della baseline sequenziale.
 bool exp_correctness(const std::string& images_dir) {
-    std::printf("\n[0] Verifica di correttezza (immagini %dx%d, h = %g)\n", CORRECTNESS_SIZE,
+    std::printf("\nVerifica di correttezza (immagini %dx%d, h = %g)\n", CORRECTNESS_SIZE,
                 CORRECTNESS_SIZE, MAIN_BANDWIDTH);
     bool all_ok = true;
     for (const std::string& id : ALL_IMAGES) {
@@ -204,11 +182,10 @@ bool exp_correctness(const std::string& images_dir) {
     return all_ok;
 }
 
-// [1] Strong scaling: dimensione fissa, numero di thread crescente, per più dimensioni
-// dell'input. Per ogni dimensione: baseline seq, simd (solo vettorizzazione) e par.
+// Strong scaling: dimensione fissa, numero di thread crescente, per più dimensioni dell'input. Per ogni dimensione: baseline seq, simd (solo vettorizzazione) e par.
 bool exp_scaling(const std::string& images_dir, const std::string& results_dir, int warmup, int reps) {
-    std::printf("\n[1] Strong scaling: speedup vs thread per più dimensioni (h = %g)\n", MAIN_BANDWIDTH);
-    CsvWriter csv(results_dir + "/scaling.csv");
+    std::printf("\nStrong scaling: speedup vs thread per più dimensioni (h = %g)\n", MAIN_BANDWIDTH);
+    std::ofstream csv = open_csv(results_dir + "/scaling.csv");
     for (int size : SCALING_SIZES) {
         Dataset data;
         if (!load_or_complain(image_path(images_dir, MAIN_IMAGE, size), data)) return false;
@@ -216,38 +193,38 @@ bool exp_scaling(const std::string& images_dir, const std::string& results_dir, 
 
         Params p = make_params(MAIN_BANDWIDTH);
         const Measurement seq = measure(data, p, Variant::Seq, warmup, reps);
-        csv.row(MAIN_IMAGE, data, Variant::Seq, p, seq);
+        write_row(csv, MAIN_IMAGE, data, Variant::Seq, p, seq);
         print_measurement("seq", seq);
 
         const Measurement simd = measure(data, p, Variant::Simd, warmup, reps);
-        csv.row(MAIN_IMAGE, data, Variant::Simd, p, simd);
+        write_row(csv, MAIN_IMAGE, data, Variant::Simd, p, simd);
         print_measurement("simd", simd, seq.mean);
 
         for (int t : SCALING_THREADS) {
             p.threads = t;
             const Measurement par = measure(data, p, Variant::Par, warmup, reps);
-            csv.row(MAIN_IMAGE, data, Variant::Par, p, par);
+            write_row(csv, MAIN_IMAGE, data, Variant::Par, p, par);
             const std::string label = "par " + std::to_string(t) + " thread";
             print_measurement(label.c_str(), par, seq.mean);
         }
     }
-    return csv.ok();
+    return csv.good();
 }
 
-// [2] Effetto del bandwidth: numero di cluster, iterazioni medie, tempi seq e par.
+// Effetto del bandwidth: numero di cluster, iterazioni medie, tempi seq e par.
 // Salva anche le immagini segmentate per ogni bandwidth (figure della relazione).
 bool exp_bandwidth(const std::string& images_dir, const std::string& results_dir, int warmup, int reps) {
-    std::printf("\n[2] Effetto del bandwidth (%dx%d, par con %d thread)\n", BANDWIDTH_SIZE,
+    std::printf("\nEffetto del bandwidth (%dx%d, par con %d thread)\n", BANDWIDTH_SIZE,
                 BANDWIDTH_SIZE, MAIN_THREADS);
-    CsvWriter csv(results_dir + "/bandwidth.csv");
+    std::ofstream csv = open_csv(results_dir + "/bandwidth.csv");
     Dataset data;
     if (!load_or_complain(image_path(images_dir, MAIN_IMAGE, BANDWIDTH_SIZE), data)) return false;
     for (float h : BANDWIDTHS) {
         Params p = make_params(h, MAIN_THREADS);
         const Measurement seq = measure(data, p, Variant::Seq, warmup, reps);
-        csv.row(MAIN_IMAGE, data, Variant::Seq, p, seq);
+        write_row(csv, MAIN_IMAGE, data, Variant::Seq, p, seq);
         const Measurement par = measure(data, p, Variant::Par, warmup, reps);
-        csv.row(MAIN_IMAGE, data, Variant::Par, p, par);
+        write_row(csv, MAIN_IMAGE, data, Variant::Par, p, par);
         std::printf(" h = %g\n", h);
         print_measurement("seq", seq);
         print_measurement("par", par, seq.mean);
@@ -265,43 +242,43 @@ bool exp_bandwidth(const std::string& images_dir, const std::string& results_dir
         }
     }
     std::printf("  immagini segmentate salvate in %s/seg_*.png\n", results_dir.c_str());
-    return csv.ok();
+    return csv.good();
 }
 
-// [3] Strategie di scheduling OpenMP: il lavoro per punto non è uniforme (numero di
+// Strategie di scheduling OpenMP: il lavoro per punto non è uniforme (numero di
 // iterazioni diverso), quindi il bilanciamento del carico conta.
 bool exp_schedule(const std::string& images_dir, const std::string& results_dir, int warmup, int reps) {
-    std::printf("\n[3] Scheduling OpenMP (%dx%d, h = %g, %d thread)\n", MAIN_SIZE, MAIN_SIZE,
+    std::printf("\nScheduling OpenMP (%dx%d, h = %g, %d thread)\n", MAIN_SIZE, MAIN_SIZE,
                 MAIN_BANDWIDTH, MAIN_THREADS);
-    CsvWriter csv(results_dir + "/schedule.csv");
+    std::ofstream csv = open_csv(results_dir + "/schedule.csv");
     Dataset data;
     if (!load_or_complain(image_path(images_dir, MAIN_IMAGE, MAIN_SIZE), data)) return false;
     for (const std::string& s : SCHEDULES) {
         const Params p = make_params(MAIN_BANDWIDTH, MAIN_THREADS, s);
         const Measurement m = measure(data, p, Variant::Par, warmup, reps);
-        csv.row(MAIN_IMAGE, data, Variant::Par, p, m);
+        write_row(csv, MAIN_IMAGE, data, Variant::Par, p, m);
         print_measurement(s.c_str(), m);
     }
-    return csv.ok();
+    return csv.good();
 }
 
-// [4] Layout di memoria: AoS (r g b interleaved) vs SoA (tre array separati), stesso codice SIMD.
+// Layout di memoria: AoS (r g b interleaved) vs SoA (tre array separati), stesso codice SIMD.
 bool exp_layout(const std::string& images_dir, const std::string& results_dir, int warmup, int reps) {
-    std::printf("\n[4] Layout di memoria AoS vs SoA (%dx%d, h = %g)\n", MAIN_SIZE, MAIN_SIZE, MAIN_BANDWIDTH);
-    CsvWriter csv(results_dir + "/layout.csv");
+    std::printf("\nLayout di memoria AoS vs SoA (%dx%d, h = %g)\n", MAIN_SIZE, MAIN_SIZE, MAIN_BANDWIDTH);
+    std::ofstream csv = open_csv(results_dir + "/layout.csv");
     Dataset data;
     if (!load_or_complain(image_path(images_dir, MAIN_IMAGE, MAIN_SIZE), data)) return false;
     for (int t : {1, MAIN_THREADS}) {
         for (Variant v : {Variant::Par, Variant::ParAoS}) {
             const Params p = make_params(MAIN_BANDWIDTH, t);
             const Measurement m = measure(data, p, v, warmup, reps);
-            csv.row(MAIN_IMAGE, data, v, p, m);
+            write_row(csv, MAIN_IMAGE, data, v, p, m);
             const std::string label = std::string(v == Variant::Par ? "SoA" : "AoS") + ", " +
                                       std::to_string(t) + " thread";
             print_measurement(label.c_str(), m);
         }
     }
-    return csv.ok();
+    return csv.good();
 }
 
 }  // namespace

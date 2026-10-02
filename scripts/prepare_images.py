@@ -8,8 +8,6 @@ Passi di preprocessing (eseguiti una volta sola, fuori dalle misure dei tempi):
 
 Il ridimensionamento è necessario perché il mean shift è O(N^2) nel numero di pixel:
 un'immagine BSDS a piena risoluzione (481x321 = 154k pixel) richiederebbe ore in sequenziale.
-
-Uso:  .venv/bin/python scripts/prepare_images.py
 """
 
 import tarfile

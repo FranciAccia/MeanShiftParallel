@@ -1,0 +1,82 @@
+Benchmark mean shift — warm-up 1, ripetizioni 5, core logici 8
+
+[0] Verifica di correttezza (immagini 64x64, h = 12)
+  118015  simd     vs seq: max |Δmodo| = 1.10e-02, cluster 9/9, etichette uguali 4096/4096  OK
+  118015  par      vs seq: max |Δmodo| = 1.10e-02, cluster 9/9, etichette uguali 4096/4096  OK
+  118015  par_aos  vs seq: max |Δmodo| = 1.10e-02, cluster 9/9, etichette uguali 4096/4096  OK
+  108004  simd     vs seq: max |Δmodo| = 6.67e-02, cluster 5/5, etichette uguali 4096/4096  OK
+  108004  par      vs seq: max |Δmodo| = 6.67e-02, cluster 5/5, etichette uguali 4096/4096  OK
+  108004  par_aos  vs seq: max |Δmodo| = 6.67e-02, cluster 5/5, etichette uguali 4096/4096  OK
+  145059  simd     vs seq: max |Δmodo| = 7.54e-02, cluster 14/14, etichette uguali 4096/4096  OK
+  145059  par      vs seq: max |Δmodo| = 7.54e-02, cluster 14/14, etichette uguali 4096/4096  OK
+  145059  par_aos  vs seq: max |Δmodo| = 7.54e-02, cluster 14/14, etichette uguali 4096/4096  OK
+
+[1] Strong scaling: speedup vs thread per più dimensioni (h = 12)
+ 64x64 (4096 pixel)
+  seq                             0.901 s ± 0.017  [min 0.868, max 0.917]  CPU    0.90 s  K=9  iter=43.0
+  simd                            0.494 s ± 0.005  [min 0.490, max 0.503]  CPU    0.49 s  K=9  iter=43.0  speedup 1.83x
+  par 1 thread                    0.496 s ± 0.006  [min 0.491, max 0.506]  CPU    0.49 s  K=9  iter=43.0  speedup 1.82x
+  par 2 thread                    0.274 s ± 0.002  [min 0.272, max 0.278]  CPU    0.55 s  K=9  iter=43.0  speedup 3.28x
+  par 4 thread                    0.140 s ± 0.004  [min 0.136, max 0.147]  CPU    0.56 s  K=9  iter=43.0  speedup 6.42x
+  par 6 thread                    0.113 s ± 0.003  [min 0.107, max 0.117]  CPU    0.66 s  K=9  iter=43.0  speedup 7.96x
+  par 8 thread                    0.099 s ± 0.003  [min 0.093, max 0.103]  CPU    0.75 s  K=9  iter=43.0  speedup 9.09x
+  par 12 thread                   0.104 s ± 0.002  [min 0.101, max 0.107]  CPU    0.75 s  K=9  iter=43.0  speedup 8.71x
+  par 16 thread                   0.102 s ± 0.001  [min 0.100, max 0.104]  CPU    0.75 s  K=9  iter=43.0  speedup 8.84x
+ 96x96 (9216 pixel)
+  seq                             4.286 s ± 0.020  [min 4.271, max 4.325]  CPU    4.28 s  K=6  iter=42.9
+  simd                            2.300 s ± 0.001  [min 2.297, max 2.301]  CPU    2.30 s  K=6  iter=42.9  speedup 1.86x
+  par 1 thread                    2.301 s ± 0.009  [min 2.284, max 2.309]  CPU    2.30 s  K=6  iter=42.9  speedup 1.86x
+  par 2 thread                    1.202 s ± 0.001  [min 1.200, max 1.204]  CPU    2.40 s  K=6  iter=42.9  speedup 3.57x
+  par 4 thread                    0.643 s ± 0.004  [min 0.636, max 0.646]  CPU    2.55 s  K=6  iter=42.9  speedup 6.67x
+  par 6 thread                    0.553 s ± 0.005  [min 0.543, max 0.557]  CPU    3.26 s  K=6  iter=42.9  speedup 7.75x
+  par 8 thread                    0.497 s ± 0.003  [min 0.494, max 0.503]  CPU    3.68 s  K=6  iter=42.9  speedup 8.62x
+  par 12 thread                   0.490 s ± 0.003  [min 0.485, max 0.493]  CPU    3.66 s  K=6  iter=42.9  speedup 8.76x
+  par 16 thread                   0.489 s ± 0.004  [min 0.482, max 0.493]  CPU    3.66 s  K=6  iter=42.9  speedup 8.77x
+ 128x128 (16384 pixel)
+  seq                            13.151 s ± 0.022  [min 13.129, max 13.194]  CPU   13.14 s  K=16  iter=42.7
+  simd                            7.152 s ± 0.007  [min 7.147, max 7.165]  CPU    7.15 s  K=16  iter=42.6  speedup 1.84x
+  par 1 thread                    7.159 s ± 0.005  [min 7.153, max 7.168]  CPU    7.16 s  K=16  iter=42.6  speedup 1.84x
+  par 2 thread                    3.697 s ± 0.005  [min 3.690, max 3.707]  CPU    7.39 s  K=16  iter=42.6  speedup 3.56x
+  par 4 thread                    1.940 s ± 0.014  [min 1.930, max 1.968]  CPU    7.73 s  K=16  iter=42.6  speedup 6.78x
+  par 6 thread                    1.673 s ± 0.002  [min 1.669, max 1.676]  CPU    9.93 s  K=16  iter=42.6  speedup 7.86x
+  par 8 thread                    1.509 s ± 0.007  [min 1.502, max 1.521]  CPU   11.29 s  K=16  iter=42.6  speedup 8.72x
+  par 12 thread                   1.507 s ± 0.003  [min 1.503, max 1.513]  CPU   11.35 s  K=16  iter=42.6  speedup 8.73x
+  par 16 thread                   1.505 s ± 0.001  [min 1.503, max 1.506]  CPU   11.39 s  K=16  iter=42.6  speedup 8.74x
+
+[2] Effetto del bandwidth (96x96, par con 8 thread)
+ h = 6
+  seq                             5.530 s ± 0.002  [min 5.527, max 5.533]  CPU    5.53 s  K=75  iter=74.9
+  par                             0.850 s ± 0.005  [min 0.846, max 0.857]  CPU    6.29 s  K=75  iter=74.9  speedup 6.50x
+ h = 8
+  seq                             5.118 s ± 0.005  [min 5.113, max 5.126]  CPU    5.12 s  K=30  iter=61.9
+  par                             0.704 s ± 0.003  [min 0.700, max 0.707]  CPU    5.24 s  K=30  iter=61.9  speedup 7.27x
+ h = 12
+  seq                             4.265 s ± 0.001  [min 4.263, max 4.267]  CPU    4.26 s  K=6  iter=42.9
+  par                             0.499 s ± 0.006  [min 0.495, max 0.511]  CPU    3.65 s  K=6  iter=42.9  speedup 8.54x
+ h = 16
+  seq                             3.499 s ± 0.060  [min 3.452, max 3.606]  CPU    3.47 s  K=5  iter=30.5
+  par                             0.360 s ± 0.003  [min 0.357, max 0.366]  CPU    2.64 s  K=5  iter=30.5  speedup 9.73x
+ h = 24
+  seq                             3.329 s ± 0.005  [min 3.325, max 3.337]  CPU    3.33 s  K=4  iter=23.2
+  par                             0.279 s ± 0.002  [min 0.277, max 0.283]  CPU    2.05 s  K=4  iter=23.2  speedup 11.94x
+ h = 32
+  seq                             3.463 s ± 0.057  [min 3.427, max 3.578]  CPU    3.45 s  K=3  iter=18.6
+  par                             0.228 s ± 0.000  [min 0.228, max 0.229]  CPU    1.67 s  K=3  iter=18.6  speedup 15.19x
+  immagini segmentate salvate in results/seg_*.png
+
+[3] Scheduling OpenMP (128x128, h = 12, 8 thread)
+  static                          2.239 s ± 0.030  [min 2.201, max 2.273]  CPU   10.30 s  K=16  iter=42.6
+  static,1                        1.598 s ± 0.034  [min 1.548, max 1.641]  CPU   11.17 s  K=16  iter=42.6
+  static,64                       1.653 s ± 0.029  [min 1.616, max 1.693]  CPU   10.94 s  K=16  iter=42.6
+  dynamic,1                       1.632 s ± 0.126  [min 1.527, max 1.883]  CPU   11.42 s  K=16  iter=42.6
+  dynamic,16                      1.588 s ± 0.048  [min 1.540, max 1.660]  CPU   11.44 s  K=16  iter=42.6
+  dynamic,256                     1.577 s ± 0.041  [min 1.542, max 1.659]  CPU   11.46 s  K=16  iter=42.6
+  guided                          1.595 s ± 0.015  [min 1.572, max 1.617]  CPU   11.88 s  K=16  iter=42.6
+
+[4] Layout di memoria AoS vs SoA (128x128, h = 12)
+  SoA, 1 thread                   7.176 s ± 0.014  [min 7.166, max 7.203]  CPU    7.17 s  K=16  iter=42.6
+  AoS, 1 thread                   7.727 s ± 0.231  [min 7.601, max 8.199]  CPU    7.65 s  K=16  iter=42.6
+  SoA, 8 thread                   1.510 s ± 0.003  [min 1.506, max 1.513]  CPU   11.23 s  K=16  iter=42.6
+  AoS, 8 thread                   1.636 s ± 0.006  [min 1.627, max 1.646]  CPU   11.83 s  K=16  iter=42.6
+
+Risultati salvati in results/*.csv

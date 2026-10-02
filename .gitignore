@@ -16,3 +16,7 @@ build/
 
 # macOS
 .DS_Store
+
+# Ambiente Python e archivio originale del dataset (rigenerabile con scripts/prepare_images.py)
+.venv/
+data/

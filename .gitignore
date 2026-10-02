@@ -1,0 +1,18 @@
+# Build CMake / CLion
+cmake-build-*/
+build/
+
+# File di IDE specifici dell'utente (JetBrains/CLion)
+.idea/workspace.xml
+.idea/shelf/
+.idea/usage.statistics.xml
+.idea/dictionaries/
+
+# Oggetti compilati ed eseguibili
+*.o
+*.obj
+*.out
+*.exe
+
+# macOS
+.DS_Store

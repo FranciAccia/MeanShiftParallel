@@ -202,7 +202,7 @@ inline int nearest_center(const Pixel& m, const std::vector<Pixel>& centers) {
     return best;
 }
 
-}  // namespace
+}
 
 Result mean_shift(const Dataset& data, const Params& params, Variant variant) {
     const Kernel k = make_kernel(params);
@@ -250,16 +250,14 @@ const char* variant_name(Variant variant) {
     return "?";
 }
 
-bool parse_variant(const std::string& name, Variant& variant) {
-    if (name == "seq")          variant = Variant::Seq;
-    else if (name == "simd")    variant = Variant::Simd;
-    else if (name == "par")     variant = Variant::Par;
-    else if (name == "par_aos") variant = Variant::ParAoS;
-    else return false;
-    return true;
+Variant parse_variant(const std::string& name) {
+    if (name == "seq")     return Variant::Seq;
+    if (name == "simd")    return Variant::Simd;
+    if (name == "par_aos") return Variant::ParAoS;
+    return Variant::Par;
 }
 
-bool set_schedule(const std::string& schedule) {
+void set_schedule(const std::string& schedule) {
     const std::string::size_type comma = schedule.find(',');
     const std::string kind = schedule.substr(0, comma);
     const int chunk = (comma == std::string::npos) ? 0 : std::atoi(schedule.c_str() + comma + 1);
@@ -267,8 +265,6 @@ bool set_schedule(const std::string& schedule) {
     omp_sched_t sched;
     if (kind == "static")       sched = omp_sched_static;
     else if (kind == "dynamic") sched = omp_sched_dynamic;
-    else if (kind == "guided")  sched = omp_sched_guided;
-    else return false;
+    else                        sched = omp_sched_guided;
     omp_set_schedule(sched, chunk);  // chunk 0 = dimensione di default dell'implementazione
-    return true;
 }

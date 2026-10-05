@@ -137,13 +137,6 @@ std::string image_path(const std::string& dir, const std::string& id, int size) 
     return dir + "/" + id + "_" + std::to_string(size) + ".png";
 }
 
-bool load_or_complain(const std::string& path, Dataset& data) {
-    if (load_image(path, data)) return true;
-    std::cerr << "ERRORE: immagine non trovata: " << path
-              << " (generarla con scripts/prepare_images.py)\n";
-    return false;
-}
-
 Params make_params(float bandwidth, int threads = 1, const std::string& schedule = "dynamic,16") {
     Params p;
     p.bandwidth = bandwidth;
@@ -159,7 +152,7 @@ bool exp_correctness(const std::string& images_dir) {
     bool all_ok = true;
     for (const std::string& id : ALL_IMAGES) {
         Dataset data;
-        if (!load_or_complain(image_path(images_dir, id, CORRECTNESS_SIZE), data)) return false;
+        load_image(image_path(images_dir, id, CORRECTNESS_SIZE), data);
         const Result ref = mean_shift(data, make_params(MAIN_BANDWIDTH), Variant::Seq);
         for (Variant v : {Variant::Simd, Variant::Par, Variant::ParAoS}) {
             const Result res = mean_shift(data, make_params(MAIN_BANDWIDTH, MAIN_THREADS), v);
@@ -183,12 +176,12 @@ bool exp_correctness(const std::string& images_dir) {
 }
 
 // Strong scaling: dimensione fissa, numero di thread crescente, per più dimensioni dell'input. Per ogni dimensione: baseline seq, simd (solo vettorizzazione) e par.
-bool exp_scaling(const std::string& images_dir, const std::string& results_dir, int warmup, int reps) {
+void exp_scaling(const std::string& images_dir, const std::string& results_dir, int warmup, int reps) {
     std::printf("\nStrong scaling: speedup vs thread per più dimensioni (h = %g)\n", MAIN_BANDWIDTH);
     std::ofstream csv = open_csv(results_dir + "/scaling.csv");
     for (int size : SCALING_SIZES) {
         Dataset data;
-        if (!load_or_complain(image_path(images_dir, MAIN_IMAGE, size), data)) return false;
+        load_image(image_path(images_dir, MAIN_IMAGE, size), data);
         std::printf(" %dx%d (%d pixel)\n", size, size, data.size());
 
         Params p = make_params(MAIN_BANDWIDTH);
@@ -208,17 +201,16 @@ bool exp_scaling(const std::string& images_dir, const std::string& results_dir, 
             print_measurement(label.c_str(), par, seq.mean);
         }
     }
-    return csv.good();
 }
 
 // Effetto del bandwidth: numero di cluster, iterazioni medie, tempi seq e par.
 // Salva anche le immagini segmentate per ogni bandwidth (figure della relazione).
-bool exp_bandwidth(const std::string& images_dir, const std::string& results_dir, int warmup, int reps) {
+void exp_bandwidth(const std::string& images_dir, const std::string& results_dir, int warmup, int reps) {
     std::printf("\nEffetto del bandwidth (%dx%d, par con %d thread)\n", BANDWIDTH_SIZE,
                 BANDWIDTH_SIZE, MAIN_THREADS);
     std::ofstream csv = open_csv(results_dir + "/bandwidth.csv");
     Dataset data;
-    if (!load_or_complain(image_path(images_dir, MAIN_IMAGE, BANDWIDTH_SIZE), data)) return false;
+    load_image(image_path(images_dir, MAIN_IMAGE, BANDWIDTH_SIZE), data);
     for (float h : BANDWIDTHS) {
         Params p = make_params(h, MAIN_THREADS);
         const Measurement seq = measure(data, p, Variant::Seq, warmup, reps);
@@ -233,7 +225,7 @@ bool exp_bandwidth(const std::string& images_dir, const std::string& results_dir
     // Segmentazioni di esempio di tutte le immagini (dimensione principale), fuori dalle misure
     for (const std::string& id : ALL_IMAGES) {
         Dataset img;
-        if (!load_or_complain(image_path(images_dir, id, MAIN_SIZE), img)) return false;
+        load_image(image_path(images_dir, id, MAIN_SIZE), img);
         for (float h : BANDWIDTHS) {
             const Result res = mean_shift(img, make_params(h, MAIN_THREADS), Variant::Par);
             char name[128];
@@ -242,32 +234,30 @@ bool exp_bandwidth(const std::string& images_dir, const std::string& results_dir
         }
     }
     std::printf("  immagini segmentate salvate in %s/seg_*.png\n", results_dir.c_str());
-    return csv.good();
 }
 
 // Strategie di scheduling OpenMP: il lavoro per punto non è uniforme (numero di
 // iterazioni diverso), quindi il bilanciamento del carico conta.
-bool exp_schedule(const std::string& images_dir, const std::string& results_dir, int warmup, int reps) {
+void exp_schedule(const std::string& images_dir, const std::string& results_dir, int warmup, int reps) {
     std::printf("\nScheduling OpenMP (%dx%d, h = %g, %d thread)\n", MAIN_SIZE, MAIN_SIZE,
                 MAIN_BANDWIDTH, MAIN_THREADS);
     std::ofstream csv = open_csv(results_dir + "/schedule.csv");
     Dataset data;
-    if (!load_or_complain(image_path(images_dir, MAIN_IMAGE, MAIN_SIZE), data)) return false;
+    load_image(image_path(images_dir, MAIN_IMAGE, MAIN_SIZE), data);
     for (const std::string& s : SCHEDULES) {
         const Params p = make_params(MAIN_BANDWIDTH, MAIN_THREADS, s);
         const Measurement m = measure(data, p, Variant::Par, warmup, reps);
         write_row(csv, MAIN_IMAGE, data, Variant::Par, p, m);
         print_measurement(s.c_str(), m);
     }
-    return csv.good();
 }
 
 // Layout di memoria: AoS (r g b interleaved) vs SoA (tre array separati), stesso codice SIMD.
-bool exp_layout(const std::string& images_dir, const std::string& results_dir, int warmup, int reps) {
+void exp_layout(const std::string& images_dir, const std::string& results_dir, int warmup, int reps) {
     std::printf("\nLayout di memoria AoS vs SoA (%dx%d, h = %g)\n", MAIN_SIZE, MAIN_SIZE, MAIN_BANDWIDTH);
     std::ofstream csv = open_csv(results_dir + "/layout.csv");
     Dataset data;
-    if (!load_or_complain(image_path(images_dir, MAIN_IMAGE, MAIN_SIZE), data)) return false;
+    load_image(image_path(images_dir, MAIN_IMAGE, MAIN_SIZE), data);
     for (int t : {1, MAIN_THREADS}) {
         for (Variant v : {Variant::Par, Variant::ParAoS}) {
             const Params p = make_params(MAIN_BANDWIDTH, t);
@@ -278,7 +268,6 @@ bool exp_layout(const std::string& images_dir, const std::string& results_dir, i
             print_measurement(label.c_str(), m);
         }
     }
-    return csv.good();
 }
 
 }  // namespace
@@ -286,11 +275,6 @@ bool exp_layout(const std::string& images_dir, const std::string& results_dir, i
 bool run_benchmarks(const std::string& which, const std::string& images_dir,
                     const std::string& results_dir, int warmup, int reps) {
     const bool all = (which == "all");
-    if (!all && which != "correctness" && which != "scaling" && which != "bandwidth" &&
-        which != "schedule" && which != "layout") {
-        std::cerr << "ERRORE: esperimento sconosciuto '" << which << "'\n";
-        return false;
-    }
     std::filesystem::create_directories(results_dir);
     std::printf("Benchmark mean shift — warm-up %d, ripetizioni %d, core logici %d\n",
                 warmup, reps, omp_get_num_procs());
@@ -300,11 +284,10 @@ bool run_benchmarks(const std::string& which, const std::string& images_dir,
         std::cerr << "ERRORE: verifica di correttezza fallita, benchmark interrotto\n";
         return false;
     }
-    bool ok = true;
-    if (all || which == "scaling")   ok = exp_scaling(images_dir, results_dir, warmup, reps) && ok;
-    if (all || which == "bandwidth") ok = exp_bandwidth(images_dir, results_dir, warmup, reps) && ok;
-    if (all || which == "schedule")  ok = exp_schedule(images_dir, results_dir, warmup, reps) && ok;
-    if (all || which == "layout")    ok = exp_layout(images_dir, results_dir, warmup, reps) && ok;
+    if (all || which == "scaling")   exp_scaling(images_dir, results_dir, warmup, reps);
+    if (all || which == "bandwidth") exp_bandwidth(images_dir, results_dir, warmup, reps);
+    if (all || which == "schedule")  exp_schedule(images_dir, results_dir, warmup, reps);
+    if (all || which == "layout")    exp_layout(images_dir, results_dir, warmup, reps);
     std::printf("\nRisultati salvati in %s/*.csv\n", results_dir.c_str());
-    return ok;
+    return true;
 }

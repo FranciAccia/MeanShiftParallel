@@ -39,23 +39,14 @@ const char* option(int argc, char** argv, const char* name, const char* fallback
 }
 
 int cmd_segment(int argc, char** argv) {
-    if (argc < 4) { usage(); return 1; }
     Params params;
     params.bandwidth = std::atof(option(argc, argv, "--bandwidth", "12"));
     params.threads = std::atoi(option(argc, argv, "--threads", "8"));
     params.schedule = option(argc, argv, "--schedule", params.schedule.c_str());
-    Variant variant;
-    if (!parse_variant(option(argc, argv, "--variant", "par"), variant) || params.bandwidth <= 0 ||
-        params.threads < 1 || !set_schedule(params.schedule)) {
-        usage();
-        return 1;
-    }
+    const Variant variant = parse_variant(option(argc, argv, "--variant", "par"));
 
     Dataset data;
-    if (!load_image(argv[2], data)) {
-        std::cerr << "ERRORE: impossibile leggere l'immagine " << argv[2] << "\n";
-        return 1;
-    }
+    load_image(argv[2], data);
     std::cout << "Immagine " << argv[2] << ": " << data.width << "x" << data.height << " ("
               << data.size() << " pixel), variante " << variant_name(variant) << ", h = "
               << params.bandwidth << "\n";
@@ -67,10 +58,7 @@ int cmd_segment(int argc, char** argv) {
     std::cout << "Cluster trovati: " << res.centers.size() << ", iterazioni medie per punto: "
               << static_cast<double>(res.total_iters) / data.size() << "\n"
               << "Tempo: " << elapsed << " s (shift " << res.t_shift << " s, modi " << res.t_modes << " s)\n";
-    if (!save_segmentation(argv[3], data, res)) {
-        std::cerr << "ERRORE: impossibile scrivere " << argv[3] << "\n";
-        return 1;
-    }
+    save_segmentation(argv[3], data, res);
     std::cout << "Immagine segmentata salvata in " << argv[3] << "\n";
     return 0;
 }
@@ -79,7 +67,6 @@ int cmd_bench(int argc, char** argv) {
     const std::string which = (argc >= 3 && argv[2][0] != '-') ? argv[2] : "all";
     const int warmup = std::atoi(option(argc, argv, "--warmup", std::to_string(DEFAULT_WARMUP).c_str()));
     const int reps = std::atoi(option(argc, argv, "--reps", std::to_string(DEFAULT_REPS).c_str()));
-    if (warmup < 0 || reps < 1) { usage(); return 1; }
     const bool ok = run_benchmarks(which, option(argc, argv, "--images", "images"),
                                    option(argc, argv, "--results", "results"), warmup, reps);
     return ok ? 0 : 1;

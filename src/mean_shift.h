@@ -49,7 +49,7 @@ struct Result {
 Result mean_shift(const Dataset& data, const Params& params, Variant variant);
 
 const char* variant_name(Variant variant);
-bool parse_variant(const std::string& name, Variant& variant);
+Variant parse_variant(const std::string& name);
 
 // Imposta lo scheduling usato da schedule(runtime), es. "static", "dynamic,16", "guided".
-bool set_schedule(const std::string& schedule);
+void set_schedule(const std::string& schedule);

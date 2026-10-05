@@ -172,7 +172,7 @@ long long shift_par_aos(const Dataset& d, const Params& p, const Kernel& k, std:
 }
 
 // Fase 2: rilevamento dei modi. Un modo diventa un nuovo centro se dista almeno merge_factor·h
-// dai centri già trovati. Costo O(N·K), trascurabile rispetto alla fase 1 (O(N²·iterazioni)).
+// dai centri già trovati.
 
 inline float dist2(const Pixel& a, const Pixel& b) {
     const float dr = a.r - b.r, dg = a.g - b.g, db = a.b - b.b;
@@ -228,7 +228,7 @@ Result mean_shift(const Dataset& data, const Params& params, Variant variant) {
 
     const float radius = params.merge_factor * params.bandwidth;
     res.centers = find_centers(res.modes, radius * radius);
-    // Etichettatura: ogni pixel al centro più vicino al suo modo (indipendente per pixel).
+    // Etichettatura: ogni pixel al centro più vicino al suo modo.
     #pragma omp parallel for schedule(static) if (parallel)
     for (int i = 0; i < n; ++i) {
         res.labels[i] = nearest_center(res.modes[i], res.centers);

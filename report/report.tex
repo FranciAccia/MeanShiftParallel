@@ -66,18 +66,17 @@ University of Florence\\
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-Mean shift is a non-parametric clustering algorithm that finds the modes of a kernel density
-estimate; applied to the colours of an image it produces a segmentation without fixing the number
-of clusters in advance. Its cost is $O(N^2)$ per iteration in the number of pixels $N$, which makes
-the sequential version slow even on small images. This report presents a C++17 implementation in
-four variants: a scalar sequential baseline, a single-thread SIMD version, an OpenMP parallel
-version with a vectorized inner loop, and an Array-of-Structures variant used to study the memory
-layout. The parallelization exploits the independence of the points: no synchronization is needed
-except for reductions. Experiments on images of the Berkeley Segmentation Dataset (BSDS500), run on
-an Apple M2 (4 performance + 4 efficiency cores, 128-bit NEON), show a $1.84\x$ gain from
-vectorization alone and a total speedup of $8.7\x$ with 8 threads on a $128\x128$ image
-(13.15\,s $\rightarrow$ 1.51\,s), reaching $15.2\x$ for large bandwidths. Thread scaling is almost
-linear up to the 4 performance cores and then limited by the slower efficiency cores.
+Mean shift clusters data by moving every point towards a mode of a kernel density estimate. Applied
+to the colours of an image, it gives a segmentation without choosing the number of clusters in
+advance, but each iteration costs $O(N^2)$ in the number of pixels. I implemented it in C++17 in
+four variants: a scalar sequential baseline, a single-thread SIMD version, an OpenMP version with a
+vectorized inner loop, and an Array-of-Structures copy of the latter to study the memory layout.
+Since every point converges on its own, the parallel version needs no locks, only reductions. On
+images from the Berkeley Segmentation Dataset and an Apple M2 (4 performance and 4 efficiency
+cores), vectorization alone gives $1.84\x$, and with 8 threads a $128\x128$ image goes from
+13.15\,s to 1.51\,s ($8.7\x$). With a large bandwidth the speedup reaches $15.2\x$, mostly because
+the scalar baseline gets slower. Threads scale almost linearly on the 4 performance cores; the
+efficiency cores add much less.
 \end{abstract}
 
 %%%%%%%%% BODY TEXT
@@ -86,83 +85,74 @@ linear up to the 4 performance cores and then limited by the slower efficiency c
 
 \section{Introduction}
 
-This report presents the implementation and performance analysis of a sequential and a parallel
-version of the \textit{mean shift} clustering algorithm, applied to colour image segmentation. The
-source code, the benchmark harness and all the results are available in the public repository
+This report describes a sequential and a parallel implementation of mean shift clustering for
+colour image segmentation, and measures how much the parallel one gains and why. Code, benchmark
+and results are in the repository
 \url{https://github.com/FranciAccia/MeanShiftParallel}.
 
-\subsection{Problem description and motivation}
-Mean shift~\cite{fukunaga1975,cheng1995,comaniciu2002} is a non-parametric iterative procedure
-that locates the local maxima (\emph{modes}) of a probability density estimated from the data with
-a kernel density estimate (KDE). Every data point is moved uphill along the gradient of the density
-until it converges to a mode; points that reach the same mode form a cluster. Unlike K-means, the
-number of clusters is not specified in advance: the only parameter is the \emph{bandwidth} $h$ of
-the kernel, which sets the scale of the structures that are considered distinct
+\subsection{The problem}
+Mean shift looks for the local maxima (\emph{modes}) of
+a density estimated from the data with a kernel (KDE). Each point is moved uphill on this density
+until it stops at a mode, and the points that stop at the same mode form a cluster. The number of
+clusters is not an input, as it is in K-means. The only parameter is the bandwidth $h$ of the
+kernel, which decides how far apart two structures must be to count as different
 (Figure~\ref{fig:kde}).
 
-In image segmentation each pixel is a point in the RGB colour space. After convergence each pixel
-is replaced by the colour of its mode, which produces a flat-colour segmentation of the image
-(Figure~\ref{fig:segmentations}).
+For segmentation, each pixel is a point in RGB space. Replacing every pixel with the colour of its
+mode gives an image made of a few flat colours (Figure~\ref{fig:segmentations}).
 
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.85\linewidth]{kde_example.png}
-    \caption{Kernel density estimate of a 2D point set: the modes of the density (centres of the
-    contour lines) are the cluster centres found by mean shift.}
+    \caption{Kernel density estimate of a 2D point set. The modes (centres of the contour lines)
+    are the cluster centres that mean shift finds. Figure from the course slides~\cite{course_slides}.}
     \label{fig:kde}
 \end{figure}
 
 \begin{figure*}[!t]
     \centering
     \includegraphics[width=0.82\textwidth]{segmentations.png}
-    \caption{Segmentation of the three BSDS500 images ($128\x128$) for increasing bandwidth. A small
-    $h$ keeps many shades (over-segmentation), a large $h$ merges distinct objects.}
+    \caption{Segmentation of the three BSDS500 images ($128\x128$) for increasing bandwidth. With
+    a small $h$ many shades survive; with a large one, different objects get the same colour.}
     \label{fig:segmentations}
 \end{figure*}
 
-\subsection{Computational challenges}
-For $N$ points, every iteration of every point has to evaluate the kernel against all the $N$
-points of the dataset, so the cost is $O(N^2)$ per iteration, multiplied by the number of
-iterations needed to converge (about 43 per point in our main configuration). A $128\x128$ image
-($N = 16\,384$) already requires $\approx 1.1\cdot 10^{10}$ kernel evaluations, which take
-13\,s on one core. A full-resolution BSDS image ($481\x321$) would take hours.
+\subsection{Why it is slow}
+At every iteration, each point has to compute the kernel against all $N$ points, so one iteration
+over the whole image costs $O(N^2)$, and points need about 43 iterations to converge in my main
+configuration. A $128\x128$ image ($N = 16\,384$) already means about $1.1\cdot10^{10}$ kernel
+evaluations, 13\,s on one core. A full-size BSDS image ($481\x321$) would take hours.
 
-The problem is however \emph{embarrassingly parallel}: the trajectory of each point depends only
-on the original dataset, which is read-only, and not on the other trajectories.
+The good news is that the trajectories do not interact: a point only reads the original dataset,
+which never changes. This makes the problem easy to split among threads.
 
-\subsection{Objectives}
-\begin{enumerate}
-    \item A sequential, scalar baseline in C++ used as reference for correctness and time.
-    \item A parallel version that combines OpenMP multi-threading over the points with SIMD
-    vectorization of the inner loop over the neighbours.
-    \item An experimental analysis of speedup, efficiency and scalability, and of the effect of the
-    bandwidth, of the OpenMP scheduling policy and of the memory layout (AoS vs SoA).
-\end{enumerate}
+\subsection{Goals}
+I wrote a scalar sequential version as the reference for both results and times, then a parallel
+version that uses OpenMP threads over the points and SIMD instructions over the neighbours.
+Finally I measured speedup and efficiency for different numbers of threads, and the effect of the
+bandwidth, of the OpenMP schedule and of the memory layout.
 
-\section{Algorithm description}
+\section{The algorithm}
 
-\subsection{Sequential algorithm}
-Let $x_1,\dots,x_N \in \mathbb{R}^3$ be the RGB colours of the pixels (values in $[0,255]$). With a
-Gaussian kernel of bandwidth $h$, each point $y$ is updated with the weighted mean of the dataset:
+\subsection{Sequential version}
+The pixels are points $x_1,\dots,x_N \in \mathbb{R}^3$ with values in $[0,255]$. With a Gaussian
+kernel of bandwidth $h$, one step moves a point $y$ to the weighted mean of the dataset:
 \begin{equation}
     y \leftarrow \frac{\sum_{j} w_j\, x_j}{\sum_j w_j}, \qquad
     w_j = \exp\!\left(-\frac{\|y - x_j\|^2}{2h^2}\right).
     \label{eq:shift}
 \end{equation}
-This is the \emph{full} mean shift (not the blurring variant): the points $x_j$ never change, only
-the copy $y$ of each point moves. Weights beyond $3h$ are negligible ($w < 0.012$) and are treated
-as zero. A point stops when the shift is smaller than $\varepsilon h$ with $\varepsilon = 10^{-3}$,
-or after 100 iterations. The complete algorithm has three phases:
-\begin{enumerate}
-    \item \textbf{Shift} (Algorithm~\ref{alg:ms}): every point converges to its mode,
-    $O(N^2 \cdot \text{iter})$.
-    \item \textbf{Mode detection}: modes are scanned in index order; a mode becomes a new cluster
-    centre if it is farther than $h/2$ from all the centres found so far, $O(N K)$ with $K$
-    clusters.
-    \item \textbf{Labelling}: each pixel is assigned to the centre nearest to its mode, $O(N K)$.
-\end{enumerate}
-Phases 2 and 3 take about 0.2\,ms against 7--13\,s of phase 1 (0.01\%), so all the optimization
-effort is spent on phase 1.
+This is the standard (non-blurring) mean shift: the dataset stays fixed and only the copy $y$ of
+each point moves. Neighbours farther than $3h$ would get a weight below 0.012, so I set it to zero.
+A point stops when it moves less than $\varepsilon h$ ($\varepsilon = 10^{-3}$) or after 100
+iterations.
+
+The program has three phases. The first is the shift of Algorithm~\ref{alg:ms}, which costs
+$O(N^2 \cdot \text{iter})$. The second finds the clusters: it scans the modes in index order and
+opens a new cluster for every mode that is at least $h/2$ away from the centres found so far
+($O(NK)$ for $K$ clusters). The third gives each pixel the label of the centre closest to its mode.
+Phases 2 and 3 together take about 0.2\,ms, against 7--13\,s for phase 1, so phase 1 is the only
+part worth optimizing.
 
 \begin{algorithm}[!htb]
 \caption{Shift phase of mean shift}
@@ -186,24 +176,23 @@ effort is spent on phase 1.
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Parallelizable sections}
-\begin{itemize}
-    \item \textbf{Outer loop over the points} (coarse grain): each point reads only the original
-    dataset and writes only its own mode, so the iterations are independent and can be distributed
-    among threads. The number of iterations to convergence varies from point to point, so the work
-    is not uniform and the scheduling policy matters.
-    \item \textbf{Inner loop over the neighbours} (fine grain): the same arithmetic is applied to
-    all the $N$ points and the results are accumulated in four sums ($s_r, s_g, s_b, s_w$), a
-    reduction that can be vectorized.
-    \item \textbf{Labelling} is also independent per pixel and is parallelized, while mode
-    detection is kept sequential so that the clusters do not depend on the number of threads.
-\end{itemize}
+\subsection{What can run in parallel}
+The outer loop is the natural place for threads: iteration $i$ reads the dataset and writes only
+the mode of point $i$. Its iterations do not all cost the same, though, because some points need
+many more steps than others, so the choice of schedule matters.
+
+The inner loop does the same arithmetic on every neighbour and accumulates four sums ($s_r, s_g,
+s_b, s_w$). That is a reduction, and it can be vectorized.
+
+The labelling is also independent per pixel, so I parallelized it too. I kept the cluster search
+sequential on purpose: scanning the modes in a fixed order makes the clusters the same for any
+number of threads.
 
 \section{Parallel implementation}
 
 \subsection{Variants}
-All the variants share the same algorithm, parameters and kernel and differ only in how phase 1 is
-executed (Table~\ref{tab:variants}).
+All four variants use the same parameters and the same kernel. They only differ in how they run
+phase 1 (Table~\ref{tab:variants}).
 
 \begin{table}[h]
 \centering
@@ -220,8 +209,8 @@ executed (Table~\ref{tab:variants}).
 \label{tab:variants}
 \end{table}
 
-\subsection{Thread-level parallelism (OpenMP)}
-The outer loop over the points is distributed among the threads with a single directive:
+\subsection{Threads (OpenMP)}
+One directive splits the points among the threads:
 \begin{lstlisting}
 #pragma omp parallel for \
         schedule(runtime) reduction(+ : total)
@@ -232,56 +221,56 @@ for (int i = 0; i < n; ++i) {
     modes[i] = y;
 }
 \end{lstlisting}
-\texttt{schedule(runtime)} lets the benchmark choose the policy (static, dynamic, guided and the
-chunk size) through \texttt{omp\_set\_schedule} without recompiling. Unless stated otherwise,
-\texttt{dynamic,16} is used (Section~\ref{sec:schedule}).
+With \texttt{schedule(runtime)} the benchmark can set the policy and chunk size through
+\texttt{omp\_set\_schedule}, so testing a new schedule does not require recompiling. All the
+experiments use \texttt{dynamic,16} unless they say otherwise (Section~\ref{sec:schedule} explains
+why).
 
 \subsection{Synchronization}
-No locks, \texttt{critical} sections or atomics are needed: the dataset is only read, and the
-iteration $i$ writes only \texttt{modes[i]}, once, at the end of its convergence. The only shared
-quantity is the total number of iterations (used for statistics), which is accumulated with
-\texttt{reduction(+:total)}, so each thread keeps a private counter merged at the end of the loop.
-False sharing on \texttt{modes} is possible only at chunk boundaries and happens once per point
-after $\approx 43 \cdot N$ kernel evaluations, so it is negligible and no padding was added.
+The parallel loop needs no locks, \texttt{critical} sections or atomics. Nobody writes the dataset,
+and iteration $i$ writes \texttt{modes[i]} once, when point $i$ has converged. The only value that
+all threads update is the iteration counter I keep for statistics, and \texttt{reduction(+:total)}
+gives each thread its own copy and adds them up at the end. Two threads can write to the same cache
+line of \texttt{modes} only at the border between two chunks, once per point, after about
+$43 \cdot N$ kernel evaluations. That is too rare to matter, so I did not add padding.
 
 \subsection{Vectorization (SIMD)}
-The inner loop is vectorized with \texttt{\#pragma omp simd reduction(+:sr,sg,sb,sw)}. On the
-ARM NEON unit of the M2 (128-bit registers) this processes 4 single-precision neighbours per
-instruction. Two changes were needed to make the loop vectorizable:
-\begin{itemize}
-    \item \textbf{Branchless cutoff.} The \texttt{if} on the $3h$ cutoff becomes a select,
-    \texttt{w = (d2 <= cutoff2) ? exp(...) : 0}, so all lanes execute the same instructions.
-    \item \textbf{Inline exponential.} \texttt{std::exp} inside the loop is compiled into a call
-    per lane, which cancelled the SIMD gain. It was replaced by \texttt{fast\_exp}, an inline,
-    branchless approximation ($2^k$ written in the IEEE-754 exponent times a degree-5 polynomial,
-    relative error $< 4\cdot10^{-7}$). To make the comparison fair, the scalar baseline uses the same
-    function, so \texttt{seq} vs \texttt{simd} measures only the effect of vectorization.
-\end{itemize}
-The baseline instead keeps the branch, which lets it skip the exponential for the points beyond the
-cutoff, and its vectorization is explicitly disabled
-(\texttt{\#pragma clang loop vectorize(disable)}). The clang vectorization report
-(\texttt{-Rpass=loop-vectorize}) confirms that the inner loops of \texttt{simd}/\texttt{par} and
-\texttt{par\_aos} are vectorized with width 4 and interleave count 2, and that the loop of
-\texttt{seq} is not. No \texttt{-ffast-math} is used: floating-point sums are reordered only where
-\texttt{omp simd reduction} explicitly allows it.
+The inner loop carries \texttt{\#pragma omp simd reduction(+:sr,sg,sb,sw)}. The M2 has 128-bit
+NEON registers, so one instruction handles 4 neighbours in single precision. The loop did not
+vectorize well as written in Algorithm~\ref{alg:ms}, and it took two changes.
+
+First, the cutoff became a select instead of an \texttt{if}:
+\texttt{w = (d2 <= cutoff2) ? exp(...) : 0}. All lanes now run the same instructions, and the
+far neighbours get weight zero.
+
+Second, I replaced \texttt{std::exp}. Inside the vector loop the compiler turned it into one
+library call per lane, and the SIMD version ended up no faster than the scalar one. My
+\texttt{fast\_exp} computes $2^k$ by writing $k$ into the IEEE-754 exponent and multiplies it by a
+degree-5 polynomial; the relative error is below $4\cdot10^{-7}$ and it is inline and branch-free.
+The scalar baseline uses the same function, so the difference between \texttt{seq} and
+\texttt{simd} comes only from vectorization.
+
+The baseline keeps the \texttt{if}, so it skips the exponential for far neighbours, and I disabled
+its vectorization explicitly with \texttt{\#pragma clang loop vectorize(disable)}. The clang
+report (\texttt{-Rpass=loop-vectorize}) shows the inner loops of \texttt{simd}, \texttt{par} and
+\texttt{par\_aos} vectorized with width 4 and interleave 2, and the \texttt{seq} loop left scalar. I
+did not use \texttt{-ffast-math}: the compiler reorders floating-point sums only where
+\texttt{omp simd reduction} allows it.
 
 \subsection{Data layout}
-The \texttt{Dataset} keeps the pixels in both layouts, built once when the image is loaded (outside
-the timed region): an Array of Structures (\texttt{struct Pixel \{float r,g,b;\}}) and a Structure of
-Arrays (three contiguous arrays \texttt{r}, \texttt{g}, \texttt{b}). With SoA, 4 consecutive values
-of the same channel are loaded with one vector load; with AoS the loop accesses memory with stride 3
-and the channels have to be de-interleaved. Single precision is enough for colours in $[0,255]$ and
-doubles the number of SIMD lanes compared to \texttt{double}.
+The \texttt{Dataset} structure holds the pixels twice, built when the image is loaded and outside
+the timed code. One copy is an Array of Structures (\texttt{struct Pixel \{float r,g,b;\}}), the
+other a Structure of Arrays with three separate arrays \texttt{r}, \texttt{g}, \texttt{b}. With
+SoA, one vector load brings in 4 values of the same channel. With AoS the loop reads with stride 3
+and has to separate the channels first. I used \texttt{float} because colours in $[0,255]$ do not
+need double precision, and 4 lanes are better than 2.
 
-\subsection{Difficulties}
-\begin{itemize}
-    \item The first SIMD version used \texttt{std::exp} and was not faster than the scalar code;
-    the inline exponential solved it.
-    \item Non-uniform work (points in textured regions need more iterations than points in
-    uniform regions) made the default static schedule the slowest (Section~\ref{sec:schedule}).
-    \item The test machine has no fan: under continuous load the times grew by up to 50\%, which
-    required a cool-down between runs (Section~\ref{sec:setup}).
-\end{itemize}
+\subsection{Problems I ran into}
+The first SIMD version was no faster than the scalar code; the culprit was \texttt{std::exp}, as
+described above. The default static schedule turned out to be the slowest one, because points in
+textured areas need more iterations than points in flat areas (Section~\ref{sec:schedule}). The
+laptop has no fan, and under continuous load the times grew by up to 50\%, so I had to add a pause
+between runs (Section~\ref{sec:setup}).
 
 \begin{figure*}[!t]
     \centering
@@ -307,38 +296,37 @@ doubles the number of SIMD lanes compared to \texttt{double}.
 \end{itemize}
 
 \subsection{Dataset and preprocessing}
-Three real images from the BSDS500 test set~\cite{arbelaez2011} were chosen for their variety of
-colours: 118015 (boats in a harbour, main image), 108004 (a tiger in the grass) and 145059 (people
-in coloured clothes). A Python script crops the central square of each image and resizes it to
-$64^2$, $96^2$ and $128^2$ pixels with a Lanczos filter. Resizing is necessary because of the
-$O(N^2)$ cost; the $128^2$ size is the smallest one with a sequential time above 10\,s (13.15\,s at
-$h=12$). Preprocessing is done once, offline, and is not part of the measurements; images are read
-with \texttt{stb\_image}~\cite{stb}.
+I took three images from the BSDS500 test set~\cite{arbelaez2011} with different colour content:
+118015 (boats in a harbour, used as the main image), 108004 (a tiger in the grass) and 145059
+(people in coloured clothes). A Python script crops the central square of each image and resizes it
+to $64^2$, $96^2$ and $128^2$ pixels with a Lanczos filter. The images have to be this small
+because of the $O(N^2)$ cost: $128^2$ is the smallest size whose sequential time is above the 10\,s
+asked by the guidelines (13.15\,s with $h=12$). Preprocessing runs once, offline, and is not timed.
+The program reads the images with \texttt{stb\_image}.
 
 \subsection{Parameters}
-The main configuration is image 118015, $128\x128$ ($N = 16\,384$), $h = 12$, 8 threads,
-\texttt{dynamic,16}. The experiments vary one parameter at a time:
+The main configuration is image 118015 at $128\x128$ ($N = 16\,384$), $h = 12$, 8 threads and
+\texttt{dynamic,16}. Each experiment changes one thing:
 \begin{itemize}
-    \item \textbf{Strong scaling}: 1, 2, 4, 6, 8, 12, 16 threads (up to $2\x$ the cores), on the
-    three sizes.
-    \item \textbf{Bandwidth}: $h \in \{6, 8, 12, 16, 24, 32\}$ ($96\x96$ to keep the sequential runs
-    short).
-    \item \textbf{Scheduling}: \texttt{static}, \texttt{static,1}, \texttt{static,64},
-    \texttt{dynamic} with chunk 1, 16, 256, \texttt{guided}.
-    \item \textbf{Layout}: AoS vs SoA with 1 and 8 threads.
+    \item \textbf{strong scaling}: 1, 2, 4, 6, 8, 12 and 16 threads (up to twice the cores) on all
+    three sizes;
+    \item \textbf{bandwidth}: $h \in \{6, 8, 12, 16, 24, 32\}$, on $96\x96$ so that the sequential
+    runs stay short;
+    \item \textbf{schedule}: \texttt{static}, \texttt{static,1}, \texttt{static,64},
+    \texttt{dynamic} with chunk 1, 16 and 256, \texttt{guided};
+    \item \textbf{layout}: AoS and SoA, with 1 and 8 threads.
 \end{itemize}
 
-\subsection{Methodology}
-Each configuration runs 1 discarded warm-up and 5 measured runs; the report gives mean, standard
-deviation, minimum, maximum and a 95\% confidence interval ($1.96\,\sigma/\sqrt{5}$). Wall-clock
-time is measured with \texttt{omp\_get\_wtime()} around the clustering only (image loading and
-layout conversion are excluded); CPU time (sum over all threads, user + system) is read with
+\subsection{How I measured}
+Each configuration runs once as a warm-up, which is discarded, and then 5 times. I report mean,
+standard deviation, minimum, maximum and a 95\% confidence interval ($1.96\,\sigma/\sqrt{5}$).
+Wall-clock time comes from \texttt{omp\_get\_wtime()} and covers only the clustering, not the image
+loading or the layout conversion. CPU time, summed over all threads (user + system), comes from
 \texttt{getrusage}. Speedup is $S(p) = T_{seq}/T_{par}(p)$ and efficiency $E(p) = S(p)/p$.
 
-Because the machine is fanless, after each run the benchmark sleeps for as long as the run lasted
-(at most 5\,s), so that every run starts from a similar temperature. macOS does not allow disabling
-frequency scaling or pinning threads to cores. Background applications were closed during the
-measurements.
+Since the machine has no fan, after every run the benchmark waits as long as the run took (5\,s at
+most), so that each run starts at about the same temperature. On macOS I could not fix the CPU
+frequency or pin threads to cores. I closed the other applications during the measurements.
 
 \begin{figure*}[!t]
     \centering
@@ -348,42 +336,40 @@ measurements.
     \label{fig:bandwidth}
 \end{figure*}
 
-\section{Results and analysis}
+\section{Results}
 
-\subsection{Correctness validation}
-Before every benchmark, an automatic check runs all the variants on the three $64\x64$ images and
-compares them with \texttt{seq}; the benchmark aborts if the check fails. The check requires the
-same number of clusters, the same label for every pixel, and modes within 1\% of $h$ (0.12 on the
-0--255 scale). The result is:
-\begin{itemize}
-    \item clusters and labels are identical for all variants (9/9, 5/5, 14/14 clusters,
-    4096/4096 labels);
-    \item the modes differ by at most $1.1\cdot10^{-2}$, $6.7\cdot10^{-2}$ and $7.5\cdot10^{-2}$.
-\end{itemize}
-The small differences are expected: the SIMD reduction sums in a different order, and the
-stopping rule ($\varepsilon h$) lets two trajectories stop at slightly different points. The
-\texttt{simd}, \texttt{par} and \texttt{par\_aos} variants produce exactly the same modes for any
-number of threads, because each point is still computed by a single thread in the same order.
+\subsection{Correctness}
+Before any benchmark, the program runs every variant on the three $64\x64$ images and compares it
+with \texttt{seq}. If the check fails, the benchmark stops. A variant passes if it finds the same
+number of clusters, gives every pixel the same label, and has every mode within 1\% of $h$ (0.12 on
+the 0--255 scale) of the sequential one.
 
-\subsection{Effect of vectorization}
-Figure~\ref{fig:vectorization} compares \texttt{seq} and \texttt{simd} on one thread. The gain is
-$1.83$--$1.86\x$ and does not depend on the image size. It is lower than the theoretical $4\x$ of
-4-lane NEON because the two variants do different work: the scalar code skips the exponential for
-every neighbour beyond $3h$, while the vector code computes it for all the neighbours and then
-discards it with the select. Section~\ref{sec:bandwidth} confirms this.
+All variants pass. Clusters and labels match exactly (9, 5 and 14 clusters; 4096 of 4096 labels),
+and the largest mode difference is $1.1\cdot10^{-2}$, $6.7\cdot10^{-2}$ and $7.5\cdot10^{-2}$ on
+the three images. Some difference is expected: the SIMD reduction adds the terms in a different
+order, and the $\varepsilon h$ stopping rule can then stop two trajectories at slightly different
+points. \texttt{simd}, \texttt{par} and \texttt{par\_aos} give exactly the same modes as each other
+for any number of threads, since each point is still computed by one thread in a fixed order.
+
+\subsection{Vectorization}
+On one thread \texttt{simd} is $1.83$--$1.86\x$ faster than \texttt{seq}, at every image size
+(Figure~\ref{fig:vectorization}). NEON has 4 lanes, so why not $4\x$? The two loops do not do the
+same work. The scalar loop skips the exponential for every neighbour beyond $3h$, while the vector
+loop computes it for all neighbours and throws the far ones away with the select. The bandwidth
+experiment in Section~\ref{sec:bandwidth} confirms this.
 
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=\linewidth]{vectorization.png}
-    \caption{Scalar baseline vs SIMD on a single thread, with 95\% confidence intervals and
+    \caption{Scalar baseline and SIMD version on one thread, with 95\% confidence intervals and the
     speedup of \texttt{simd} over \texttt{seq}.}
     \label{fig:vectorization}
 \end{figure}
 
 \subsection{Strong scaling}
-Table~\ref{tab:scaling} and Figure~\ref{fig:scaling} report the strong scaling on the main image.
-Two speedups are shown: the speedup due to threads only ($T_{par}(1)/T_{par}(p)$), and the total
-speedup over the scalar baseline, which also includes vectorization.
+Table~\ref{tab:scaling} and Figure~\ref{fig:scaling} show the strong scaling on the main image. I
+report two speedups: the one due to threads alone, $T_{par}(1)/T_{par}(p)$, and the total one over
+the scalar baseline, which includes vectorization.
 
 \begin{table}[!htb]
 \centering
@@ -407,24 +393,23 @@ over the scalar \texttt{seq}.}
 \label{tab:scaling}
 \end{table}
 
-The curve has three regions:
-\begin{enumerate}
-    \item \textbf{1--4 threads}: almost linear, with efficiency 0.97 at 2 threads and 0.92 at 4.
-    The scheduler places the first threads on the 4 performance cores.
-    \item \textbf{4--8 threads}: the extra threads run on the efficiency cores, which are much
-    slower: 4 more cores add only $\approx 1.05$ to the speedup ($3.69 \rightarrow 4.75$), i.e.\ each
-    E-core contributes about 0.26 of a P-core on this kernel. Counting the capacity in P-core
-    equivalents ($4 + 4\cdot0.26 \approx 5$), the speedup at 8 threads uses $\approx 94\%$ of it.
-    The CPU time (Figure~\ref{fig:cputime}) also grows from 7.7\,s to 11.3\,s: the same work takes
-    longer on the slower cores.
-    \item \textbf{12--16 threads}: there are no more cores, the speedup stays at $4.75\x$ and the
-    oversubscription does not cost anything measurable.
-\end{enumerate}
-The curves of the three sizes are almost identical: even the $64\x64$ image gives each thread
-hundreds of points, each costing $\approx 43 \cdot N$ kernel evaluations, so the OpenMP overhead is
-negligible at every size. The best configuration is \textbf{8 threads}, with a total speedup of
-$\mathbf{8.72\x}$ (13.15\,s $\rightarrow$ 1.51\,s), of which $1.84\x$ from SIMD and $4.75\x$ from
-the threads.
+Up to 4 threads the scaling is close to ideal: efficiency is 0.97 with 2 threads and 0.92 with 4.
+These threads run on the performance cores.
+
+From 4 to 8 threads the new threads land on the efficiency cores, and the speedup only goes from
+3.69 to 4.75. Four E-cores add about as much as one P-core, so on this loop an E-core is worth
+roughly 0.26 of a P-core. Measured in P-core equivalents the machine offers about
+$4 + 4\cdot0.26 \approx 5$, and 4.75 is 94\% of that. The CPU time tells the same story
+(Figure~\ref{fig:cputime}): it grows from 7.7\,s to 11.3\,s because the same work takes longer on
+the slower cores.
+
+With 12 and 16 threads there are no more cores to use. The speedup stays at $4.75\x$, and
+oversubscription costs nothing I could measure.
+
+The three image sizes give nearly identical curves. Even at $64\x64$ each thread gets hundreds of
+points, and each point costs about $43 \cdot N$ kernel evaluations, so the OpenMP overhead never
+shows up. The best result is with 8 threads: $8.72\x$ over the baseline (13.15\,s to 1.51\,s),
+which is $1.84\x$ from SIMD times $4.75\x$ from threads.
 
 \begin{figure}[!htb]
     \centering
@@ -433,13 +418,13 @@ the threads.
     \label{fig:cputime}
 \end{figure}
 
-\subsection{Effect of the bandwidth}
+\subsection{Bandwidth}
 \label{sec:bandwidth}
-Table~\ref{tab:bandwidth} and Figure~\ref{fig:bandwidth} show the effect of $h$ on the $96\x96$
-image. A larger bandwidth smooths the density: the number of clusters falls from 75 to 3 and the
-iterations needed to converge from 75 to 19, so both versions get faster.
-Figure~\ref{fig:segmentations} shows the visual effect: $h \approx 12$ separates the main objects,
-while $h = 24$ already merges, for example, the boat and the sea.
+Table~\ref{tab:bandwidth} and Figure~\ref{fig:bandwidth} show what happens on the $96\x96$ image
+as $h$ grows. The density becomes smoother: the clusters drop from 75 to 3, and the mean number of
+iterations from 75 to 19, so both versions run faster. Figure~\ref{fig:segmentations} shows the
+visual side. Around $h = 12$ the main objects are separated, while at $h = 24$ the boat already
+takes the colour of the sea.
 
 \begin{table}[!htb]
 \centering
@@ -459,26 +444,25 @@ iter: mean iterations per point.}
 \label{tab:bandwidth}
 \end{table}
 
-The speedup grows with $h$, from $6.5\x$ to $15.2\x$. Dividing the time by the iterations explains
-why: the cost of one iteration of \texttt{par} is constant ($11.3$\,ms at $h=6$, $12.3$\,ms at
-$h=32$), because the vector loop always evaluates all the neighbours, while the cost of one
-iteration of \texttt{seq} grows from 74\,ms to 186\,ms, because with a larger $h$ fewer neighbours
-fall beyond the cutoff and fewer exponentials are skipped. The speedups above $8\x$ are therefore
-not superlinear thread scaling: they come from comparing a vector loop with a fixed cost against a
-scalar baseline whose cost depends on $h$. For the same reason the SIMD gain is smaller at small
-$h$.
+The speedup also grows with $h$, from $6.5\x$ to $15.2\x$. Dividing each time by the number of
+iterations shows why. One iteration of \texttt{par} costs the same at every bandwidth (11.3\,ms at
+$h=6$, 12.3\,ms at $h=32$), because the vector loop always processes every neighbour. One iteration
+of \texttt{seq} goes from 74\,ms to 186\,ms: with a wider kernel, fewer neighbours fall outside the
+cutoff, and the scalar loop can skip fewer exponentials. So the values above $8\x$ do not mean the
+threads scale better than linearly. The baseline simply gets more expensive as $h$ grows, while the
+vector loop does not. By the same logic, the SIMD gain is smaller at small $h$.
 
-\subsection{Effect of the scheduling policy}
+\subsection{Schedule}
 \label{sec:schedule}
-Figure~\ref{fig:schedule} compares the OpenMP schedules with 8 threads. Plain \texttt{static} is
-the slowest (2.24\,s, $+42\%$ over the best): it gives each thread one contiguous block of $N/8$
-pixels, i.e.\ one horizontal band of the image, and the number of iterations depends on the region
-(uniform sky converges quickly, textured areas slowly), so some threads finish much later than
-others. \texttt{static,1} distributes the pixels in round-robin and is already as good as the dynamic
-policies (1.60\,s), which shows that the imbalance comes from the spatial correlation of the work.
-All the other policies are within 5\% of each other (1.58--1.65\,s); \texttt{dynamic,1} has the
-largest variance. We use \texttt{dynamic,16}, which balances the load with a modest number of
-dispatches.
+Figure~\ref{fig:schedule} compares the OpenMP schedules with 8 threads. Plain \texttt{static} is the
+slowest at 2.24\,s, 42\% more than the best. It gives each thread one block of $N/8$ consecutive
+pixels, that is, one horizontal band of the image. How many iterations a pixel needs depends on
+where it is (the flat sky converges fast, the textured harbour slowly), so some threads finish long
+before the others. \texttt{static,1}, which deals the pixels out one at a time, already runs in
+1.60\,s, as fast as the dynamic schedules. The imbalance therefore comes from the spatial grouping
+of the work, not from static scheduling itself. All the schedules except plain \texttt{static} are
+within 5\% of each other (1.58--1.65\,s), and \texttt{dynamic,1} has the largest variance. I kept
+\texttt{dynamic,16}, which balances the load without handing out too many small chunks.
 
 \begin{figure}[!htb]
     \centering
@@ -488,82 +472,76 @@ dispatches.
     \label{fig:schedule}
 \end{figure}
 
-\subsection{Effect of the memory layout}
-Figure~\ref{fig:layout} compares the SoA and AoS layouts with the same vectorized loop. SoA is
-faster by 7.7\% on one thread (7.18 vs 7.73\,s) and by 8.3\% on 8 threads (1.51 vs 1.64\,s). The
-difference is small because the working set ($16\,384 \x 12$\,B $= 192$\,KB per layout) fits in
-the L2 cache and the loop is compute-bound; with AoS the cost is the extra de-interleaving of the
-stride-3 loads, not memory bandwidth.
+\subsection{Memory layout}
+With the same vectorized loop, SoA beats AoS by 7.7\% on one thread (7.18 against 7.73\,s) and by
+8.3\% on 8 threads (1.51 against 1.64\,s), as Figure~\ref{fig:layout} shows. The gap is small
+because the data is small: one copy of the image takes $16\,384 \x 12$\,B $= 192$\,KB and stays in
+the L2 cache. The loop is limited by arithmetic, not by memory, and the price of AoS is the extra
+work to separate the channels of the stride-3 loads.
 
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.85\linewidth]{layout.png}
-    \caption{SoA vs AoS layout ($128\x128$, \texttt{par}, 95\% CI).}
+    \caption{SoA and AoS layouts ($128\x128$, \texttt{par}, 95\% CI).}
     \label{fig:layout}
 \end{figure}
 
-\subsection{Bottleneck analysis}
-\begin{itemize}
-    \item \textbf{Compute, not memory}: the dataset fits in cache and is only read; one kernel
-    evaluation costs $\approx 0.63$\,ns on one P-core with SIMD ($7.16\,\text{s} / 1.14\cdot10^{10}$
-    evaluations). The exponential dominates the arithmetic of the loop.
-    \item \textbf{Heterogeneous cores}: beyond 4 threads the speedup is limited by the slow
-    E-cores, not by the algorithm.
-    \item \textbf{Wasted work in SIMD}: the branchless cutoff computes the kernel also for the far
-    neighbours, which limits the vector gain to $1.84\x$ at $h = 12$.
-\end{itemize}
+\subsection{Where the time goes}
+The program is compute-bound. The dataset fits in cache and is only read; one kernel evaluation
+takes about 0.63\,ns on one P-core with SIMD ($7.16\,\text{s}$ for $1.14\cdot10^{10}$
+evaluations), and most of the arithmetic in the loop is the exponential. Beyond 4 threads the limit
+is the hardware: the extra cores are the slow ones. Inside each thread, the branch-free cutoff
+wastes work on far neighbours, which is why SIMD gives $1.84\x$ and not more at $h = 12$.
 
 \section{Discussion}
 
-\paragraph{Amdahl's law.} The sequential fraction of the parallel program is mode detection
-(0.15\,ms over 7.16\,s, $f \approx 2\cdot10^{-5}$). By Amdahl's law~\cite{amdahl1967} this would
-allow a speedup close to $p$ on any realistic number of cores, so the sequential part is not what
-limits the scaling. The real limit is the hardware: the 8 cores are not equal, and the ideal
-speedup is about 5 P-core equivalents, not 8.
+\paragraph{Amdahl's law.} The sequential part of the parallel program is the cluster search:
+0.15\,ms out of 7.16\,s, a fraction $f \approx 2\cdot10^{-5}$. With such a small $f$, Amdahl's
+law~\cite{amdahl1967} would allow a speedup close to $p$ on any realistic number of cores, so the
+sequential code is not what stops the scaling. The cores are: they are not all equal, and the ideal
+speedup on this machine is about 5, not 8.
 
-\paragraph{Gustafson's law.} The work per point grows with $N$, so with larger images the parallel
-fraction becomes even more dominant~\cite{gustafson1988}. Our sizes already show this: efficiency
-is the same from $64^2$ to $128^2$ because the overhead is negligible even at the smallest size.
-A weak-scaling experiment was not run because $O(N^2)$ work makes it impossible to keep the work
-per thread constant without very large images.
+\paragraph{Gustafson's law.} The work per point grows with $N$, so larger images make the parallel
+part even more dominant. My sizes already show it: efficiency is the same from
+$64^2$ to $128^2$, because the overhead is negligible even on the smallest image. I did not run a
+weak-scaling test: with $O(N^2)$ work, keeping the work per thread constant means multiplying $N$
+by $\sqrt{p}$, so 16 threads would need a $256\x256$ image with 16 times the work of the $128\x128$ one. Its
+sequential reference alone would take about 20 minutes with my protocol (6 runs of $\approx 210$\,s),
+on a machine that has only 8 cores anyway.
 
-\paragraph{Overheads.} Thread creation and scheduling cost microseconds, against more than 0.1\,s of
-work; oversubscription (12--16 threads) does not change the time. The overhead visible in the CPU
-time comes from the slower E-cores, not from OpenMP.
+\paragraph{Overhead.} Creating the threads and handing out chunks takes microseconds, while every
+run lasts at least 0.1\,s. Going from 8 to 16 threads does not change the time. The extra CPU time
+at 8 threads comes from the slower E-cores, not from OpenMP.
 
-\paragraph{Limitations.}
-\begin{itemize}
-    \item The laptop has no fan: under continuous load at 8 threads the time grows from 1.55 to
-    1.85\,s in 20\,s and by about 50\% after 2 minutes. The cool-down between runs mitigates it,
-    but the absolute times still depend on the temperature.
-    \item macOS does not allow fixing the CPU frequency or pinning threads to cores, so the
-    placement of threads on P/E cores is decided by the operating system.
-    \item Because of the $O(N^2)$ cost, the images are small ($\le 128^2$ pixels); full-resolution
-    images would need an approximate neighbour search.
-\end{itemize}
+\paragraph{Limitations.} The laptop has no fan. At 8 threads under continuous load, one run goes
+from 1.55 to 1.85\,s within 20\,s and gets about 50\% slower after 2 minutes. The pause between
+runs reduces the effect, but the absolute times still depend on temperature. macOS also does not
+let me fix the CPU frequency or choose which cores the threads run on; the operating system decides
+the placement on P and E cores. Finally, the $O(N^2)$ cost keeps the images at $128^2$ pixels or
+less. Full-resolution images would need a faster way to find the neighbours.
 
-\paragraph{Lessons learned.} Vectorization needs the whole loop body to be inline and branchless:
-a single library call (\texttt{std::exp}) was enough to cancel it. A fair baseline must use the
-same arithmetic as the optimized versions, otherwise the measured speedup mixes different
-algorithms. On heterogeneous CPUs, the speedup should be read against the real capacity of the
-cores, not against the number of threads.
+\paragraph{What I learned.} A loop only vectorizes well if its whole body is inline and free of
+branches: a single library call, \texttt{std::exp}, was enough to cancel the SIMD gain. The
+baseline must do the same arithmetic as the optimized code, otherwise the speedup measures two
+different algorithms. And on a CPU with two kinds of core, the number of threads is the wrong
+yardstick for the speedup; what the cores can actually deliver is the right one.
 
 \section{Conclusions}
-We implemented mean shift clustering for colour image segmentation in C++ with OpenMP and SIMD.
-The parallelization needs no synchronization other than reductions, and the results are validated
-against the sequential baseline: identical clusters and labels, modes within 0.08 on the 0--255
-scale.
+I implemented mean shift for colour segmentation in C++ with OpenMP and SIMD. The parallel version
+needs no synchronization apart from reductions, and it gives the same clusters and labels as the
+sequential one, with modes within 0.08 on the 0--255 scale.
 
-The best configuration is the \texttt{par} variant with SoA layout, 8 threads and dynamic
-scheduling (\texttt{dynamic,16}): on a $128\x128$ image with $h = 12$ it runs in 1.51\,s against
-13.15\,s of the scalar baseline, a speedup of $8.72\x$ ($1.84\x$ from vectorization, $4.75\x$ from
-threads), and up to $15.2\x$ for large bandwidths. Thread scaling is almost linear on the 4
-performance cores and saturates on the efficiency cores.
+The fastest configuration is \texttt{par} with the SoA layout, 8 threads and \texttt{dynamic,16}.
+On the $128\x128$ image with $h = 12$ it takes 1.51\,s against 13.15\,s for the scalar baseline,
+a speedup of $8.72\x$ ($1.84\x$ from SIMD, $4.75\x$ from threads), and up to $15.2\x$ with large
+bandwidths. Threads scale almost linearly on the 4 performance cores and much less on the
+efficiency cores.
 
-Future developments: skipping the far neighbours also in the vector loop (e.g.\ sorting or
-bucketing the points by colour, or a k-d tree), the blurring variant of mean shift which converges
-in fewer iterations, adding the spatial coordinates to the feature space (joint spatial-range
-mean shift~\cite{comaniciu2002}), and a GPU implementation for full-resolution images.
+Several things could make it faster. The vector loop could skip far neighbours too, for example by
+sorting or bucketing the points by colour, or with a k-d tree. The blurring variant of mean shift
+converges in fewer iterations. Adding pixel coordinates to the colours (joint spatial-range mean
+shift) would give better segmentations, and a GPU version would make
+full-resolution images practical.
 
 {\small
 \bibliographystyle{ieee}
@@ -577,17 +555,16 @@ feature-space analysis technique used for mode seeking and image segmentation. T
 performs kernel density estimation and gradient ascent on pixel colour coordinates (RGB).
 \item \textbf{Contributions:}
 	\begin{enumerate}
-	\item \textbf{Ideas:} identified the independence of the points and the use of dynamic
-	scheduling for the irregular workload.
-	\item \textbf{Formulations:} reformulated the Gaussian weighting with a branchless cutoff and an
-	inline exponential to allow SIMD processing.
-	\item \textbf{Software/Coding:} implemented the whole C++ codebase (sequential baseline, SIMD,
-	OpenMP and layout variants), the benchmark harness and the Python scripts for preprocessing and
-	plots.
-	\item \textbf{Experiments:} designed the benchmark protocol (warm-up, repetitions, confidence
-	intervals, cool-down) and the experiments on threads, bandwidth, scheduling and layout on
+	\item \textbf{Ideas:} noticed that the points are independent and that the uneven number of
+	iterations calls for dynamic scheduling.
+	\item \textbf{Formulations:} rewrote the Gaussian weighting with a branch-free cutoff and an
+	inline exponential so that it could be vectorized.
+	\item \textbf{Software/Coding:} wrote the whole C++ code (sequential baseline, SIMD, OpenMP and
+	layout variants), the benchmark and the Python scripts for preprocessing and plots.
+	\item \textbf{Experiments:} designed the measurement protocol (warm-up, repetitions, confidence
+	intervals, cool-down) and the experiments on threads, bandwidth, schedule and layout on
 	BSDS500 images.
-	\item \textbf{Analysis:} performed the speedup, efficiency and bottleneck analysis.
+	\item \textbf{Analysis:} analysed speedup, efficiency and bottlenecks.
 	\end{enumerate}
 \item \textbf{Authorship:} I confirm that I am the sole author of this writeup and the associated code.
 \end{enumerate}

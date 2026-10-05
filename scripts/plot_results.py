@@ -83,17 +83,17 @@ def plot_scaling():
         ax_t.plot(threads, [seq["mean_s"] / r["mean_s"] for r in par], "o-", color=color, label=label)
 
     ax_s.plot([1, max_threads], [1, max_threads], color=GRID, linewidth=1.5, linestyle="--", zorder=0)
-    ax_s.text(9.5, 10.5, "ideale", color=TEXT_SECONDARY, fontsize=8, rotation=35)
-    ax_s.set(xlabel="Thread", ylabel="Speedup rispetto a par con 1 thread", title="Speedup dei thread",
+    ax_s.text(9.5, 10.5, "ideal", color=TEXT_SECONDARY, fontsize=8, rotation=35)
+    ax_s.set(xlabel="Threads", ylabel="Speedup over par with 1 thread", title="Thread speedup",
              ylim=(0, 12))
     ax_e.axhline(1, color=TEXT_SECONDARY, linewidth=1, linestyle=":")
-    ax_e.set(xlabel="Thread", ylabel="Efficienza = speedup / thread", title="Efficienza", ylim=(0, 1.1))
-    ax_t.set(xlabel="Thread", ylabel="Speedup rispetto a seq", title="Speedup totale (thread + SIMD)",
+    ax_e.set(xlabel="Threads", ylabel="Efficiency = speedup / threads", title="Efficiency", ylim=(0, 1.1))
+    ax_t.set(xlabel="Threads", ylabel="Speedup over seq", title="Total speedup (threads + SIMD)",
              ylim=(0, None))
     for ax in (ax_s, ax_e, ax_t):
         ax.set_xticks(all_threads)
         ax.axvline(8, color=TEXT_SECONDARY, linewidth=1, linestyle=":")
-    ax_s.text(8.3, 0.4, "8 core\n(4P + 4E)", color=TEXT_SECONDARY, fontsize=8)
+    ax_s.text(8.3, 0.4, "8 cores\n(4P + 4E)", color=TEXT_SECONDARY, fontsize=8)
     ax_s.legend(loc="upper left")
     save(fig, "scaling.png")
 
@@ -104,8 +104,8 @@ def plot_scaling():
     fig, ax = plt.subplots(figsize=(6, 4))
     ax.errorbar(threads, [r["mean_s"] for r in par], yerr=[r["ci95_s"] for r in par], fmt="o-",
                 color=SERIES[0], capsize=3, label="Wall-clock")
-    ax.plot(threads, [r["cpu_s"] for r in par], "s--", color=SERIES[1], label="CPU (somma dei thread)")
-    ax.set(xlabel="Thread", ylabel="Tempo (s)", title=f"Tempo wall-clock e CPU, {size}×{size}", ylim=(0, None))
+    ax.plot(threads, [r["cpu_s"] for r in par], "s--", color=SERIES[1], label="CPU (sum over threads)")
+    ax.set(xlabel="Threads", ylabel="Time (s)", title=f"Wall-clock and CPU time, {size}×{size}", ylim=(0, None))
     ax.set_xticks(threads)
     ax.legend()
     save(fig, "cpu_time.png")
@@ -122,14 +122,14 @@ def plot_vectorization():
     x = range(len(sizes))
     w = 0.38
     ax.bar([i - w / 2 - 0.01 for i in x], [r["mean_s"] for r in seq], w, yerr=[r["ci95_s"] for r in seq],
-           color=SERIES[0], capsize=3, label="seq (scalare)")
+           color=SERIES[0], capsize=3, label="seq (scalar)")
     ax.bar([i + w / 2 + 0.01 for i in x], [r["mean_s"] for r in simd], w, yerr=[r["ci95_s"] for r in simd],
            color=SERIES[1], capsize=3, label="simd (NEON, 4 float)")
     for i, (a, b) in enumerate(zip(seq, simd)):
         ax.text(i + w / 2, b["mean_s"], f"{a['mean_s'] / b['mean_s']:.2f}×", ha="center", va="bottom",
                 color=TEXT_SECONDARY, fontsize=9)
     ax.set_xticks(list(x), [f"{s}×{s}" for s in sizes])
-    ax.set(xlabel="Dimensione immagine", ylabel="Tempo (s), 1 thread", title="Effetto della vettorizzazione")
+    ax.set(xlabel="Image size", ylabel="Time (s), 1 thread", title="Effect of vectorization")
     ax.grid(axis="x", visible=False)
     ax.legend()
     save(fig, "vectorization.png")
@@ -147,22 +147,22 @@ def plot_bandwidth():
     for x, r in zip(h, seq):
         axes[0].annotate(str(r["clusters"]), (x, r["clusters"]), textcoords="offset points", xytext=(0, 6),
                          ha="center", color=TEXT_SECONDARY, fontsize=9)
-    axes[0].set(xlabel="Bandwidth h", ylabel="Numero di cluster K", title="Cluster trovati", ylim=(0, None))
+    axes[0].set(xlabel="Bandwidth h", ylabel="Number of clusters K", title="Clusters found", ylim=(0, None))
 
     axes[1].plot(h, [r["avg_iter"] for r in seq], "o-", color=SERIES[0])
-    axes[1].set(xlabel="Bandwidth h", ylabel="Iterazioni medie per punto", title="Iterazioni fino a convergenza",
+    axes[1].set(xlabel="Bandwidth h", ylabel="Mean iterations per point", title="Iterations to convergence",
                 ylim=(0, None))
 
     axes[2].errorbar(h, [r["mean_s"] for r in seq], yerr=[r["ci95_s"] for r in seq], fmt="o-",
                      color=SERIES[0], capsize=3, label="seq")
     axes[2].errorbar(h, [r["mean_s"] for r in par], yerr=[r["ci95_s"] for r in par], fmt="o-",
-                     color=SERIES[1], capsize=3, label=f"par ({par[0]['threads']} thread)")
+                     color=SERIES[1], capsize=3, label=f"par ({par[0]['threads']} threads)")
     for x, a, b in zip(h, seq, par):
         axes[2].annotate(f"{a['mean_s'] / b['mean_s']:.1f}×", (x, b["mean_s"]), textcoords="offset points",
                          xytext=(0, 8), ha="center", color=TEXT_SECONDARY, fontsize=8)
-    axes[2].set(xlabel="Bandwidth h", ylabel="Tempo (s)", title="Tempo e speedup", ylim=(0, None))
+    axes[2].set(xlabel="Bandwidth h", ylabel="Time (s)", title="Time and speedup", ylim=(0, None))
     axes[2].legend()
-    fig.suptitle(f"Effetto del bandwidth ({seq[0]['size']}×{seq[0]['size']})", color=TEXT, y=1.04)
+    fig.suptitle(f"Effect of the bandwidth ({seq[0]['size']}×{seq[0]['size']})", color=TEXT, y=1.04)
     save(fig, "bandwidth.png")
 
 
@@ -176,8 +176,8 @@ def plot_schedule():
         ax.text(i, r["mean_s"] + r["ci95_s"], f"{r['mean_s']:.2f}", ha="center", va="bottom",
                 color=TEXT if r is best else TEXT_SECONDARY, fontsize=9,
                 fontweight="bold" if r is best else "normal")
-    ax.set(xlabel="schedule(kind, chunk)", ylabel="Tempo (s)",
-           title=f"Scheduling OpenMP ({rows[0]['size']}×{rows[0]['size']}, {rows[0]['threads']} thread)")
+    ax.set(xlabel="schedule(kind, chunk)", ylabel="Time (s)",
+           title=f"OpenMP scheduling ({rows[0]['size']}×{rows[0]['size']}, {rows[0]['threads']} threads)")
     ax.grid(axis="x", visible=False)
     plt.setp(ax.get_xticklabels(), rotation=20, ha="right")
     save(fig, "schedule.png")
@@ -196,8 +196,8 @@ def plot_layout():
         for x, r in zip(xs, sel):
             ax.text(x, r["mean_s"] + r["ci95_s"], f"{r['mean_s']:.2f}", ha="center", va="bottom",
                     color=TEXT_SECONDARY, fontsize=9)
-    ax.set_xticks(range(len(threads)), [f"{t} thread" for t in threads])
-    ax.set(ylabel="Tempo (s)", title=f"Layout di memoria ({rows[0]['size']}×{rows[0]['size']})")
+    ax.set_xticks(range(len(threads)), [f"{t} thread{'s' if t > 1 else ''}" for t in threads])
+    ax.set(ylabel="Time (s)", title=f"Memory layout ({rows[0]['size']}×{rows[0]['size']})")
     ax.grid(axis="x", visible=False)
     ax.legend()
     save(fig, "layout.png")
@@ -209,7 +209,7 @@ def plot_segmentations():
     bandwidths = [6, 12, 16, 24]
     fig, axes = plt.subplots(len(ids), len(bandwidths) + 1, figsize=(2.2 * (len(bandwidths) + 1), 2.3 * len(ids)))
     for row, image_id in enumerate(ids):
-        panels = [(ROOT / "images" / f"{image_id}_128.png", "Originale")]
+        panels = [(ROOT / "images" / f"{image_id}_128.png", "Original")]
         panels += [(RESULTS / f"seg_{image_id}_h{h:02d}.png", f"h = {h}") for h in bandwidths]
         for col, (path, title) in enumerate(panels):
             ax = axes[row][col]

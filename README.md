@@ -100,4 +100,5 @@ third_party/           stb_image, stb_image_write (header-only)
 scripts/               preprocessing del dataset e grafici
 images/                immagini BSDS preprocessate
 results/, figures/     risultati dei benchmark e grafici
+report/                relazione (LaTeX, template CVPR): latexmk -pdf report.tex
 ```

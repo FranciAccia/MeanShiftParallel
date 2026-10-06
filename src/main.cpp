@@ -23,14 +23,6 @@ namespace {
 const int DEFAULT_WARMUP = 1;   // run iniziali scartati (cold start)
 const int DEFAULT_REPS = 5;     // run misurati per ogni configurazione
 
-void usage() {
-    std::cerr << "Uso:\n"
-                 "  MeanShiftParallel segment <input> <output.png> [--bandwidth H] [--variant seq|simd|par|par_aos]\n"
-                 "                                                [--threads T] [--schedule S]\n"
-                 "  MeanShiftParallel bench [all|correctness|scaling|bandwidth|schedule|layout]\n"
-                 "                          [--images DIR] [--results DIR] [--warmup N] [--reps N]\n";
-}
-
 const char* option(int argc, char** argv, const char* name, const char* fallback) {
     for (int i = 1; i + 1 < argc; ++i) {
         if (std::strcmp(argv[i], name) == 0) return argv[i + 1];
@@ -77,6 +69,5 @@ int cmd_bench(int argc, char** argv) {
 int main(int argc, char** argv) {
     if (argc >= 2 && std::strcmp(argv[1], "segment") == 0) return cmd_segment(argc, argv);
     if (argc >= 2 && std::strcmp(argv[1], "bench") == 0) return cmd_bench(argc, argv);
-    usage();
     return 1;
 }

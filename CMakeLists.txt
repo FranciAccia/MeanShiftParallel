@@ -7,36 +7,27 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-# Apple clang non include OpenMP: si usa libomp di Homebrew (brew install libomp)
-if(APPLE)
-    set(CMAKE_PREFIX_PATH "/opt/homebrew/opt/libomp" ${CMAKE_PREFIX_PATH})
-    set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp")
-    set(OpenMP_CXX_LIB_NAMES "omp")
-    set(OpenMP_omp_LIBRARY "/opt/homebrew/opt/libomp/lib/libomp.dylib")
-    include_directories(SYSTEM "/opt/homebrew/opt/libomp/include")
-endif()
 find_package(OpenMP REQUIRED)
 
 add_executable(MeanShiftParallel
         src/main.cpp
         src/mean_shift.cpp
+        src/mean_shift_seq.cpp
         src/image_io.cpp
         src/benchmark.cpp)
 target_include_directories(MeanShiftParallel PRIVATE src)
 target_include_directories(MeanShiftParallel SYSTEM PRIVATE third_party)
 target_link_libraries(MeanShiftParallel PRIVATE OpenMP::OpenMP_CXX)
 
-if(MSVC)
-    target_compile_options(MeanShiftParallel PRIVATE /O2 /arch:AVX2 /openmp:experimental)
-else()
-    # Niente -ffast-math: la riduzione floating point viene riordinata solo dove lo chiede
-    # esplicitamente #pragma omp simd reduction (la baseline sequenziale resta scalare)
-    target_compile_options(MeanShiftParallel PRIVATE -O3 -march=native)
-endif()
+# Niente -ffast-math: la riduzione floating point viene riordinata solo dove lo chiede
+# esplicitamente #pragma omp simd reduction.
+# -fno-trapping-math: senza, GCC non trasforma il confronto del cutoff in una select vettoriale
+target_compile_options(MeanShiftParallel PRIVATE -O3 -march=native -fno-trapping-math)
+# La baseline sequenziale è compilata senza vettorizzazione automatica
+set_source_files_properties(src/mean_shift_seq.cpp PROPERTIES COMPILE_OPTIONS "-fno-tree-vectorize")
 
-# Report di vettorizzazione del compilatore: cmake -DVEC_REPORT=ON ...
-option(VEC_REPORT "Stampa i report di vettorizzazione (clang)" OFF)
-if(VEC_REPORT AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    target_compile_options(MeanShiftParallel PRIVATE
-            -Rpass=loop-vectorize -Rpass-missed=loop-vectorize -Rpass-analysis=loop-vectorize)
+# Report di vettorizzazione di GCC: cmake -DVEC_REPORT=ON ...
+option(VEC_REPORT "Stampa i report di vettorizzazione" OFF)
+if(VEC_REPORT)
+    target_compile_options(MeanShiftParallel PRIVATE -fopt-info-vec-optimized -fopt-info-vec-missed)
 endif()

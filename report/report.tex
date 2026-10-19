@@ -250,8 +250,8 @@ degree-5 polynomial; the relative error is below $4\cdot10^{-7}$ and it is inlin
 The scalar baseline uses the same function, so the difference between \texttt{seq} and
 \texttt{simd} comes only from vectorization.
 
-The baseline keeps the \texttt{if}, so it skips the exponential for far neighbours, and I disabled
-its vectorization explicitly with \texttt{\#pragma clang loop vectorize(disable)}. The clang
+The baseline keeps the \texttt{if}, so it skips the exponential for far neighbours. It lives in its
+own source file, compiled with \texttt{-fno-vectorize} so that the compiler leaves it scalar. The clang
 report (\texttt{-Rpass=loop-vectorize}) shows the inner loops of \texttt{simd}, \texttt{par} and
 \texttt{par\_aos} vectorized with width 4 and interleave 2, and the \texttt{seq} loop left scalar. I
 did not use \texttt{-ffast-math}: the compiler reorders floating-point sums only where
@@ -321,8 +321,8 @@ The main configuration is image 118015 at $128\x128$ ($N = 16\,384$), $h = 12$, 
 Each configuration runs once as a warm-up, which is discarded, and then 5 times. I report mean,
 standard deviation, minimum, maximum and a 95\% confidence interval ($1.96\,\sigma/\sqrt{5}$).
 Wall-clock time comes from \texttt{omp\_get\_wtime()} and covers only the clustering, not the image
-loading or the layout conversion. CPU time, summed over all threads (user + system), comes from
-\texttt{getrusage}. Speedup is $S(p) = T_{seq}/T_{par}(p)$ and efficiency $E(p) = S(p)/p$.
+loading or the layout conversion. CPU time, summed over all threads, comes from
+\texttt{clock()}. Speedup is $S(p) = T_{seq}/T_{par}(p)$ and efficiency $E(p) = S(p)/p$.
 
 Since the machine has no fan, after every run the benchmark waits as long as the run took (5\,s at
 most), so that each run starts at about the same temperature. On macOS I could not fix the CPU

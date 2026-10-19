@@ -93,7 +93,7 @@ def plot_scaling():
     for ax in (ax_s, ax_e, ax_t):
         ax.set_xticks(all_threads)
         ax.axvline(8, color=TEXT_SECONDARY, linewidth=1, linestyle=":")
-    ax_s.text(8.3, 0.4, "8 cores\n(4P + 4E)", color=TEXT_SECONDARY, fontsize=8)
+    ax_s.text(8.3, 0.4, "8 logical cores\n(4 + SMT)", color=TEXT_SECONDARY, fontsize=8)
     ax_s.legend(loc="upper left")
     save(fig, "scaling.png")
 
@@ -124,7 +124,7 @@ def plot_vectorization():
     ax.bar([i - w / 2 - 0.01 for i in x], [r["mean_s"] for r in seq], w, yerr=[r["ci95_s"] for r in seq],
            color=SERIES[0], capsize=3, label="seq (scalar)")
     ax.bar([i + w / 2 + 0.01 for i in x], [r["mean_s"] for r in simd], w, yerr=[r["ci95_s"] for r in simd],
-           color=SERIES[1], capsize=3, label="simd (NEON, 4 float)")
+           color=SERIES[1], capsize=3, label="simd")
     for i, (a, b) in enumerate(zip(seq, simd)):
         ax.text(i + w / 2, b["mean_s"], f"{a['mean_s'] / b['mean_s']:.2f}×", ha="center", va="bottom",
                 color=TEXT_SECONDARY, fontsize=9)

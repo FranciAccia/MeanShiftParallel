@@ -44,8 +44,8 @@ ridimensionamento è necessario per via della complessità O(N²). Le immagini p
 
 ## Requisiti
 
-- CMake ≥ 3.20 e un compilatore C++17 con OpenMP
-- macOS: Apple clang + `brew install libomp`
+- Linux con GCC (testato su Debian 13: `sudo apt install g++ cmake`; OpenMP è incluso in GCC)
+- CMake ≥ 3.20
 - Python 3 con `numpy`, `matplotlib`, `pillow` (solo per preprocessing e grafici)
 
 ## Compilazione ed esecuzione
@@ -70,7 +70,7 @@ python3 -m venv .venv && .venv/bin/pip install numpy matplotlib pillow
 Opzioni di `segment`: `--bandwidth H` (default 12), `--variant seq|simd|par|par_aos`
 (default `par`), `--threads T` (default 8), `--schedule S` (es. `static`, `dynamic,16`, `guided`).
 
-Report di vettorizzazione del compilatore: `cmake -S . -B build -DVEC_REPORT=ON`.
+Report di vettorizzazione di GCC: `cmake -S . -B build -DVEC_REPORT=ON`.
 
 ## Esperimenti
 
@@ -78,9 +78,7 @@ Prima di ogni benchmark una **verifica di correttezza** confronta le varianti ot
 baseline sequenziale (stessi cluster, stesse etichette per ogni pixel, modi entro l'1% di `h`) e
 interrompe l'esecuzione se fallisce. Ogni misura usa 1 run di warm-up scartato e 5 run misurati
 (media, deviazione standard, min, max, intervallo di confidenza al 95%, tempo CPU). Si misura solo
-il clustering: lettura dell'immagine e conversione dei layout sono escluse. Dopo ogni run il
-benchmark attende un tempo pari alla durata del run (max 5 s), per evitare che il thermal
-throttling della macchina di test (MacBook Air M2, senza ventola) falsi i confronti.
+il clustering: lettura dell'immagine e conversione dei layout sono escluse.
 
 | Esperimento | Cosa misura | Output |
 |-------------|-------------|--------|
@@ -93,7 +91,9 @@ throttling della macchina di test (MacBook Air M2, senza ventola) falsi i confro
 
 ```
 src/main.cpp           interfaccia a riga di comando (segment, bench)
-src/mean_shift.{h,cpp} algoritmo e varianti seq / simd / par / par_aos
+src/mean_shift.{h,cpp} algoritmo e varianti simd / par / par_aos
+src/mean_shift_seq.cpp baseline sequenziale scalare (compilata con -fno-tree-vectorize)
+src/kernel.h           kernel gaussiano, fast_exp e passo di shift comuni
 src/benchmark.{h,cpp}  misure, statistiche, esperimenti, CSV
 src/image_io.{h,cpp}   lettura/scrittura immagini
 third_party/           stb_image, stb_image_write (header-only)

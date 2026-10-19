@@ -1,16 +1,14 @@
 #include "benchmark.h"
 
 #include <omp.h>
-#include <sys/resource.h>
 
 #include <algorithm>
-#include <chrono>
 #include <cmath>
 #include <cstdio>
+#include <ctime>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <thread>
 #include <vector>
 
 #include "image_io.h"
@@ -22,7 +20,7 @@ const char* MAIN_IMAGE = "118015";                    // immagine principale (ba
 const std::vector<std::string> ALL_IMAGES = {"118015", "108004", "145059"};
 const int MAIN_SIZE = 128;                            // 128x128: sequenziale ≥ 10 s con h = 12
 const float MAIN_BANDWIDTH = 12.0f;
-const int MAIN_THREADS = 8;                           // numero di core logici dell'M2
+const int MAIN_THREADS = 8;                           // core logici del server (4 core × 2 SMT)
 
 const std::vector<int> SCALING_SIZES = {64, 96, 128};
 const std::vector<int> SCALING_THREADS = {1, 2, 4, 6, 8, 12, 16};   // fino a 2x i core
@@ -33,20 +31,15 @@ const std::vector<std::string> SCHEDULES = {
     "dynamic,1", "dynamic,16", "dynamic,256",
     "guided",
 };
-// Pausa dopo ogni run pari alla sua durata (max 5 s): evita il thermal throttling
-const double MAX_COOLDOWN_S = 5.0;
 
 const int CORRECTNESS_SIZE = 64;
 // Differenza massima tra i modi, come frazione di h: la riduzione SIMD somma in ordine diverso,
 // quindi le varianti si fermano a pochi eps·h di distanza. Cluster ed etichette devono coincidere.
 const float CORRECTNESS_TOL = 0.01f;
 
-// Tempo CPU del processo (user + system), sommato su tutti i thread.
+// Tempo CPU del processo, sommato su tutti i thread (clock() su Linux).
 double cpu_seconds() {
-    rusage usage{};
-    getrusage(RUSAGE_SELF, &usage);
-    return usage.ru_utime.tv_sec + usage.ru_utime.tv_usec * 1e-6 +
-           usage.ru_stime.tv_sec + usage.ru_stime.tv_usec * 1e-6;
+    return static_cast<double>(std::clock()) / CLOCKS_PER_SEC;
 }
 
 struct Measurement {
@@ -60,15 +53,9 @@ struct Measurement {
 
 // Esegue `warmup` run scartati e `reps` run misurati. Si misura solo il clustering:
 // caricamento dell'immagine e conversione nei due layout avvengono prima.
-void cooldown(double elapsed) {
-    std::this_thread::sleep_for(std::chrono::duration<double>(std::min(elapsed, MAX_COOLDOWN_S)));
-}
-
 Measurement measure(const Dataset& data, const Params& params, Variant variant, int warmup, int reps) {
     for (int i = 0; i < warmup; ++i) {
-        const double t0 = omp_get_wtime();
         mean_shift(data, params, variant);
-        cooldown(omp_get_wtime() - t0);
     }
 
     std::vector<double> wall, cpu, modes;
@@ -80,7 +67,6 @@ Measurement measure(const Dataset& data, const Params& params, Variant variant, 
         wall.push_back(omp_get_wtime() - t0);
         cpu.push_back(cpu_seconds() - c0);
         modes.push_back(last.t_modes);
-        cooldown(wall.back());
     }
 
     auto mean_of = [](const std::vector<double>& v) {
